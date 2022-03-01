@@ -6,28 +6,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Tables - SB Admin</title>
+        <title>Summary</title>
+        <!-- <script src = "https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
-        <script src="jquery-3.5.1.min.js"></script>
+        <!-- <script src="assets/demo/datatables-demo.js"></script> -->
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Human Resources</a>
+            <div class="col-2">
+                <a class="navbar-brand ps-3" href="index.html">Human Resources</a>
+            </div>
             <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-            <!-- Navbar-->
-            <h1 style="font-size: 1.75rem;" class="navbar-brand d-md-inline-block ms-auto"><strong>CSCI 3356</strong></h1>
-            
-
+            <div class="col-4">
+                <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            </div>
+                <!-- Course Title-->
+            <div class="col">
+                <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>CSCI 3356</strong></h1>
+            </div>  
+            <!-- Logout dropdown-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="landing-page-users.html">Students</a></li>
                         <li><a class="dropdown-item" href="landing-page-surveys.html">Surveys</a></li>
+                        <li><a class="dropdown-item" href="student_user_overview.html">People</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="login.html">Logout</a></li>
                     </ul>
@@ -147,16 +154,6 @@
                                             <th>Average Score</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Delivery</th>
-                                            <th>Group</th>
-                                            <th>Result 1</th>
-                                            <th>Result 2</th>
-                                            <th>Result 3</th>
-                                            <th>Average Score</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
                                         <tr>
                                             <td>Tiger Nixon</td>
@@ -164,7 +161,7 @@
                                             <td>Edinburgh</td>
                                             <td>61</td>
                                             <td>2011/04/25</td>
-                                            <td>$320,800</td>
+                                            <td>3</td>
                                         </tr>
                                         <tr>
                                             <td>Garrett Winters</td>

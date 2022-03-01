@@ -60,8 +60,3 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
-
-$(ctx).on('dblclick', 'tr', function () {
-  var data = table.row( this ).data();
-  alert( 'You clicked on '+data[0]+'\'s row' );
-  } );
