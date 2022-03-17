@@ -21,6 +21,7 @@ def register(request):
             return redirect('login')
         else:
             print("form is not valid")
+            print(form.errors)
     else:
         form = UserRegistrationForm()
         print("failed")
