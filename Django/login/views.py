@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+<<<<<<< HEAD
 def student_view(request):
 	username = request.POST['username']
 	password = request.POST['password']
@@ -31,3 +32,5 @@ def admin_view(request):
 	else:
 		return redirect('error')
 		# login error
+=======
+>>>>>>> 8fd45c5b34454c992c7a011bca1af103ea3d4327

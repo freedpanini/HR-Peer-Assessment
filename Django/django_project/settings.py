@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,9 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
+<<<<<<< HEAD
 #from decouple import config
 
 SECRET_KEY = 'django-insecure-ho55p4p=jazi#d#m32yil_ba*vqvia$bcz&-14b1ca9=gyx!5i'
+=======
+SECRET_KEY = 'django-insecure-ho55p4p=jazi#d#m32yil_ba*vqvia$bcz&-14b1ca9=gyx!5i'
+
+>>>>>>> 8fd45c5b34454c992c7a011bca1af103ea3d4327
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,7 +47,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
+<<<<<<< HEAD
     'login' # do i need more than this 
+=======
+    'crispy_forms',
+>>>>>>> 8fd45c5b34454c992c7a011bca1af103ea3d4327
 ]
 
 MIDDLEWARE = [
@@ -74,7 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -126,3 +136,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+1
+2
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,  'static')
