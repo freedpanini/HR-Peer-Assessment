@@ -1,16 +1,30 @@
-
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from .forms import UserRegistrationForm
 
-def home(request):
-    return render(request, 'users/home.html')
+def home_view(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    else:
+        return render(request, 'users/home.html')
 
-def login(request):
-    return render(request, 'users/login.html')
+def login_view(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return redirect('') #redirects to home
+    else:
+        return render(request, 'users/login.html')
 
-def register(request):
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+def register_view(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         print("here")
