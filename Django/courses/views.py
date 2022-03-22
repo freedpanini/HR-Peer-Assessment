@@ -4,4 +4,4 @@ from django.shortcuts import render
 def course_creation_view(request):
 
 
-	return render(request, "create_course.html",{})
+	return render(request, "users/course_create.html",{})

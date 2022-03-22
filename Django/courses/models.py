@@ -9,19 +9,19 @@ class Course(models.Model):
         ('WINTER', 'Winter')
     )
 	name 		= models.CharField(max_length=120, blank=False)
-	semester 	= models.CharField(max_length=1, choices=SEMESTERS)
-	year 		= models.DecimalField(decimal_places=0, blank=False)
+	semester 	= models.CharField(max_length=10, choices=SEMESTERS)
+	year 		= models.DecimalField(max_digits=5,decimal_places=0, blank=False)
 	code 		= models.CharField(max_length=30, blank=False)
-	course_id 	= models.AutoField()
+	course_id 	= models.AutoField(primary_key=True)
 
 class Team(models.Model):
 	name 		= models.CharField(max_length=120, blank=False)
-	course 		= models.CharField()
-	team_id 	= models.AutoField()
+	course 		= models.CharField(max_length=120)
+	team_id 	= models.AutoField(primary_key=True)
 
 # Database table to map student to teams/courses
 class StudentTeam(models.Model):
 	# Holds username
-	student 	= models.CharField(blank=False)
-	team_id 	= models.DecimalField(decimal_places=0, blank=False)
+	student 	= models.CharField(max_length=120,blank=False)
+	team_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
 
