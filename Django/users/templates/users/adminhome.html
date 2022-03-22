@@ -1,3 +1,6 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -65,8 +68,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
                                 CSCI 3394
                             </a>
-                            <a>
-                                <button class="btn btn-transparent btn-lg"><i style="color:#6c757d" class="fas fa-solid fa-plus"></i></button>
+                            <a class = "nav-link" href="{% url 'create_course' %}">
+                                <button class="btn btn-transparent btn-lg">
+                                    <i style="color:#6c757d" class="fas fa-solid fa-plus"></i>
+                                </button>
                             </a>
                         </div>
                     </div>
