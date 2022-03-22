@@ -29,10 +29,8 @@ def login_view(request):
     if user is not None:
         login(request, user)
         if user.is_staff:
-            print('is admin')
             return redirect('adminhome') #redirects to home
         else:
-            print('is not admin')
             return redirect('studenthome')
     else:
         print('did not work')
