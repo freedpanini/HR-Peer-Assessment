@@ -10,14 +10,32 @@ def home_view(request):
     else:
         return render(request, 'users/home.html')
 
+def admin_home_view(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    else:
+        return render(request, 'users/adminhome.html')
+
+def student_home_view(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    else:
+        return render(request, 'users/studenthome.html')
+
 def login_view(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        return redirect('home') #redirects to home
+        if user.is_staff:
+            print('is admin')
+            return redirect('adminhome') #redirects to home
+        else:
+            print('is not admin')
+            return redirect('studenthome')
     else:
+        print('did not work')
         return render(request, 'users/login.html')
 
 def logout_view(request):
