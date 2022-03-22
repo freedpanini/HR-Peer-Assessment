@@ -9,7 +9,7 @@ class Course(models.Model):
         ('WINTER', 'Winter')
     )
 	name = models.CharField(max_length=120, blank=False)
-    semester = models.CharField(max_length=1, choices=SEMESTERS)
+	semester = models.CharField(max_length=1, choices=SEMESTERS)
 	year = models.DecimalField(decimal_places=0, blank=False)
 	code = models.CharField(max_length=30, blank=False)
 	course_id = models.AutoField()
