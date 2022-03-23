@@ -1,5 +1,5 @@
 from django.db import models
-
+from multiselectfield import MultiSelectField
 # Create your models here.
 class Course(models.Model):
 	SEMESTERS = (
@@ -16,12 +16,15 @@ class Course(models.Model):
 
 class Team(models.Model):
 	STUDENT_LIST = (
-    	('email', 'Email'),
-    	('chat', 'Chat'),
-    	('call', 'Call'),
+    	('Hannah', 'Hannah Brooks'),
+    	('Zach', 'Zach Crews'),
+    	('Matthew', 'Matthew Scott'),
+    	('Fred', 'Fred Pan'),
+    	('Alec', 'Alec Lobanov'),
+    	('Yufan', 'Yufan Yang')
 	)
 	team_name	= models.CharField(max_length=120)
-	student_list= models.CharField(max_length=120, choices=STUDENT_LIST, default='')
+	student_list= MultiSelectField(choices=STUDENT_LIST)
 	team_id 	= models.AutoField(primary_key=True)
 
 # Database table to map student to teams/courses

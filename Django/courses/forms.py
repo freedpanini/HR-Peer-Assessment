@@ -21,12 +21,16 @@ class CourseForm(forms.Form):
 	# 	]
 class TeamForm(forms.ModelForm):
 	STUDENT_LIST = (
-	('email', 'Email'),
-	('chat', 'Chat'),
-	('call', 'Call'))
-	# student_list = forms.MultipleChoiceField(
- #        choices=STUDENT_LIST, 
- #        widget=forms.CheckboxSelectMultiple())
+    	('Hannah', 'Hannah Brooks'),
+    	('Zach', 'Zach Crews'),
+    	('Matthew', 'Matthew Scott'),
+    	('Fred', 'Fred Pan'),
+    	('Alec', 'Alec Lobanov'),
+    	('Yufan', 'Yufan Yang')
+	)
+	student_list = forms.MultipleChoiceField(
+        choices=STUDENT_LIST, 
+        widget=forms.CheckboxSelectMultiple())
 	team_name	= forms.CharField(required=True)
 	team_id		= forms.CharField(required=True)
 	class Meta:
