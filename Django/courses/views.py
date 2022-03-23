@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Course, Team, StudentTeam
-from .forms import CourseForm
+from .forms import CourseForm, TeamForm
 # Create your views here.
 def course_creation_view(request):
 	# form = CourseForm(request.POST or None)
@@ -28,4 +28,14 @@ def course_creation_view(request):
 			return redirect('adminhome')
 
 	context = {'form':form}
-	return render(request, "courses/course_create.html", {})
+	return render(request, "courses/course_create.html", context)
+
+def team_creation_view(request):
+	form=TeamForm()
+	if request.method=="POST":
+		form=TeamForm(request.POST)
+		if form.is_valid():
+			Team.objects.create(**form.cleaned_data)
+			return
+	context={'form':form}
+	return render(request, "courses/team_create.html", context)
