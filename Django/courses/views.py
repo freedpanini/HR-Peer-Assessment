@@ -22,6 +22,7 @@ def team_creation_view(request):
 		if form.is_valid():
 			Team.objects.create(**form.cleaned_data)
 			return redirect('send_email')
+			
 	context={'form':form}
 	return render(request, "courses/team_create.html", context)
 
