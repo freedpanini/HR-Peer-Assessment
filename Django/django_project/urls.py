@@ -28,5 +28,6 @@ urlpatterns = [
     path('register/', user_views.register_view, name='register'),
     path('course_creation/', course_creation_view, name="create_course"),
     path('peer_assessment/', user_views.assessment_view, name = 'peer_assessment'),
-    path('assessment_summary/', user_views.summary_view, name = 'assessment_summary')
+    path('assessment_summary/', user_views.summary_view, name = 'assessment_summary'),
+    path('create_course/', course_creation_view, name="create_course")
 ]
