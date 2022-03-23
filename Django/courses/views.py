@@ -5,6 +5,7 @@ from .forms import CourseForm
 def course_creation_view(request):
 	form=CourseForm(request.POST or None)
 	if form.is_valid():
+		Course.objects.create(**form.cleaned_data)
 		form.save()
 		form=CourseForm()
 	context={
@@ -12,4 +13,4 @@ def course_creation_view(request):
 		'form':form
 	}
 
-	return render(request, "users/course_create.html",context)
+	return render(request, "courses/course_create.html",context)
