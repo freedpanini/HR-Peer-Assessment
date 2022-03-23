@@ -22,6 +22,18 @@ def student_home_view(request):
     else:
         return render(request, 'users/studenthome.html')
 
+def assessment_view(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    else:
+        return render(request, 'users/peer-assessment.html')
+
+def summary_view(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    else:
+        return render(request, 'users/assessment-results.html')
+
 def login_view(request):
     username = request.POST.get('username')
     password = request.POST.get('password')

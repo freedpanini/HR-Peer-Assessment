@@ -25,5 +25,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', user_views.login_view, name='login'),
     path('register/', user_views.register_view, name='register'),
+<<<<<<< HEAD
+    path('course_creation/', course_creation_view, name="create_course"),
+    path('peer_assessment/', user_views.assessment_view, name = 'peer_assessment'),
+    path('assessment_summary/', user_views.summary_view, name = 'assessment_summary')
+=======
     path('create_course/', course_creation_view, name="create_course")
+>>>>>>> 2b88846ed746c0986675ea7ff867d3787e22ede1
 ]
