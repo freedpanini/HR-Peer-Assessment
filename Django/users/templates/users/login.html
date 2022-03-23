@@ -30,13 +30,20 @@
                                                 <input class="form-control" name="password" id="inputPassword" type="password" placeholder="Password" />
                                                 <label for="inputPassword">Password</label>
                                             </div>
+                                            {% if messages %}
+                                            <div class="messages">
+                                                {% for message in messages %}
+                                                <span style="color: #FF1E1E" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
                                             <div class="form-check mb-3">
                                                 <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
                                                 <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="/register">Forgot Password?</a>
-                                                <input type="submit" class="btn btn-primary">Login</input>
+                                                <input type="submit" value="Login" class="btn btn-primary"></input>
                                             </div>
                                         </form>
                                     </div>

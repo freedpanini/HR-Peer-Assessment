@@ -45,7 +45,9 @@ def login_view(request):
         else:
             return redirect('studenthome')
     else:
-        print('did not work')
+        if request.method != 'GET':
+            print('did not work')
+            messages.error(request, f'Incorrect username or password')  
         return render(request, 'users/login.html')
 
 def logout_view(request):
