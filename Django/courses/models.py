@@ -25,7 +25,6 @@ class Team(models.Model):
 	)
 	team_name	= models.CharField(max_length=120)
 	student_list= MultiSelectField(choices=STUDENT_LIST)
-	#team_id		= models.CharField(max_length=120,default=True)
 	team_id 	= models.AutoField(primary_key=True)
 
 # Database table to map student to teams/courses
