@@ -32,7 +32,7 @@ class TeamForm(forms.ModelForm):
         choices=STUDENT_LIST, 
         widget=forms.CheckboxSelectMultiple())
 	team_name	= forms.CharField(required=True)
-	team_id		= forms.CharField(required=True)
+	#team_id		= forms.CharField(required=True)
 	class Meta:
 		model   = Team
 		fields	= ['team_name','student_list','team_id']

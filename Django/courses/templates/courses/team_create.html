@@ -24,7 +24,7 @@
                                 <form action = '.' method='POST'>
                                     {% csrf_token %}
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" id="inputTeamName" type="text" placeholder="Team X" />
+                                        <input class="form-control" name='teamname' id="inputTeamName" type="text" placeholder="Team X" />
                                         <label for="inputTeamName">Team Name</label>
                                     </div>
 
@@ -48,7 +48,7 @@
                                     </div>
 
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Create Team'/></a></div>
+                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Create Team' class="btn btn-primary"/></a></div>
                                     </div>
                                 </form>
                             </div>
