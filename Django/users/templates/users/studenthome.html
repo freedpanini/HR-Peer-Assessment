@@ -1,3 +1,5 @@
+{% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,6 +9,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>User Management</title>
+        <link rel="stylesheet"  href="{%  static  'css/styles.css'  %}">
         <script src="https://kit.fontawesome.com/897e7bdcae.js" crossorigin="anonymous"></script>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
@@ -45,11 +48,11 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Courses</div>
-                            <a class="nav-link" href="index.html">
+                            <a class = "nav-link" href="/peer_assessment">
                                 <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
                                 CSCI 3356
                             </a>
-                            <a class="nav-link" href="index.html">
+                            <a class = "nav-link" href="/assessment_summary">
                                 <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
                                 CSCI 1101
                             </a>
@@ -104,42 +107,36 @@
                                             <td>Senior</td>
                                             <td>Human Resources</td>
                                             <td>BIOL-BS CSCI-BA</td>
-                                            <td><i class="fa-solid fa-trash-can"></i></td>
                                         </tr>
                                         <tr>
                                             <td>Fred Pan</td>
                                             <td>Senior</td>
                                             <td>Human Resources</td>
                                             <td>CSCI-BA ECON-BA</td>
-                                            <td><i class="fa-solid fa-trash-can"></i></td>
                                         </tr>
                                         <tr>
                                             <td>Matthew Scott</td>
                                             <td>Senior</td>
                                             <td>Human Resources</td>
-                                            <td>CSCI-BA ECON-BA</td>
-                                            <td><i class="fa-solid fa-trash-can"></i></td>
+                                            <td>CSCI-BA ECON-BA</td>    
                                         </tr>
                                         <tr>
                                             <td>Zachary Crews</td>
                                             <td>Junior</td>
                                             <td>Human Resources</td>
                                             <td>MGMT-BS MFIN</td>
-                                            <td><i class="fa-solid fa-trash-can"></i></td>
                                         </tr>
                                         <tr>
                                             <td>Hannah Brooks</td>
                                             <td>Senior</td>
                                             <td>Human Resources</td>
                                             <td>MATH-BS CSCI-BA</td>
-                                            <td><i class="fa-solid fa-trash-can"></i></td>
                                         </tr>
                                         <tr>
                                             <td>John Smith</td>
                                             <td>Sophomore</td>
                                             <td>Group X</td>
                                             <td>CSCI-BA</td>
-                                            <td><i class="fa-solid fa-trash-can"></i></td>
                                         </tr>
                                         </tr>
                                     </tbody>
