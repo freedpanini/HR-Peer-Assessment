@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users import views as user_views
-from courses.views import course_creation_view
+from courses.views import course_creation_view, team_creation_view
 
 urlpatterns = [
     path('', user_views.student_home_view, name='studenthome'),
@@ -26,8 +26,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', user_views.login_view, name='login'),
     path('register/', user_views.register_view, name='register'),
-    path('course_creation/', course_creation_view, name="create_course"),
     path('peer_assessment/', user_views.assessment_view, name = 'peer_assessment'),
     path('assessment_summary/', user_views.summary_view, name = 'assessment_summary'),
-    path('create_course/', course_creation_view, name="create_course")
+    path('create_course/', course_creation_view, name="create_course"),
+    path('create_team/',team_creation_view, name="create_team")
 ]

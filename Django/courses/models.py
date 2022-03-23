@@ -15,8 +15,13 @@ class Course(models.Model):
 	course_id 	= models.AutoField(primary_key=True)
 
 class Team(models.Model):
-	name 		= models.CharField(max_length=120, blank=False)
-	course 		= models.CharField(max_length=120)
+	STUDENT_LIST = (
+    	('email', 'Email'),
+    	('chat', 'Chat'),
+    	('call', 'Call'),
+	)
+	team_name	= models.CharField(max_length=120)
+	student_list= models.CharField(max_length=120, choices=STUDENT_LIST, default='')
 	team_id 	= models.AutoField(primary_key=True)
 
 # Database table to map student to teams/courses

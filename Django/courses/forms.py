@@ -1,5 +1,5 @@
 from django import forms
-from .models import Course
+from .models import Course, Team
 
 class CourseForm(forms.Form):
 	# name 		= forms.CharField(widget=forms.TextInput(attrs={"id":"inputCourseName"}))
@@ -8,7 +8,7 @@ class CourseForm(forms.Form):
 	# code 		= forms.CharField(widget=forms.TextInput(attrs={"id":"inputCode"}))
 	name 		= forms.CharField(required=True)
 	semester 	= forms.CharField(required=True)
-	year 		= forms.DecimalField(required=True)
+	year		= forms.DecimalField(required=True)
 	code 		= forms.CharField(required=True)
 	# class Meta:
 	# 	model = Course
@@ -19,3 +19,17 @@ class CourseForm(forms.Form):
 	# 		'code',
 	# 		'num_teams'
 	# 	]
+class TeamForm(forms.ModelForm):
+	STUDENT_LIST = (
+	('email', 'Email'),
+	('chat', 'Chat'),
+	('call', 'Call'))
+	# student_list = forms.MultipleChoiceField(
+ #        choices=STUDENT_LIST, 
+ #        widget=forms.CheckboxSelectMultiple())
+	team_name	= forms.CharField(required=True)
+	team_id		= forms.CharField(required=True)
+	class Meta:
+		model   = Team
+		fields	= ['team_name','student_list','team_id']
+
