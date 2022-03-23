@@ -35,6 +35,8 @@ def course_creation_view(request):
 def team_creation_view(request):
 	form=TeamForm()
 	if request.method=="POST":
+		teamname=request.POST.get('teamname')
+		
 		form=TeamForm(request.POST)
 		if form.is_valid():
 			Team.objects.create(**form.cleaned_data)
