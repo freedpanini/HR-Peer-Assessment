@@ -31,7 +31,12 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-md-0">
-                                                <input name="semester" class="form-control" id="inputSemester" type="text" placeholder="Semester" />
+                                                <select name="semester" class="form-control" id="inputSemester" type="text" placeholder="Semester">
+                                                    <option value="FALL">Fall</option>
+                                                    <option value="SPRING">Spring</option>
+                                                    <option value="SUMMER">Summer</option>
+                                                    <option value="WINTER">Winter</option>
+                                                </select>
                                                 <label for="inputSemester">Semester</label>
                                             </div>
                                         </div>
@@ -71,7 +76,7 @@
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2021</div>
+                    <div class="text-muted">Copyright &copy; Human Resources</div>
                     <div>
                         <a href="#">Privacy Policy</a>
                         &middot;
