@@ -24,7 +24,7 @@
                                 <form action = '.' method='POST'>
                                     {% csrf_token %}
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" id="inputTeamName" type="text" placeholder="Team X" />
+                                        <input class="form-control" name="team_name" id="inputTeamName" type="text" placeholder="Team X" />
                                         <label for="inputTeamName">Team Name</label>
                                     </div>
 
@@ -33,17 +33,17 @@
                                     </div>
 
                                     <div>
-                                        <input type="checkbox" id="student1" name="student1" value="Hannah Brooks">
+                                        <input type="checkbox" id="student1" name="student_list" value="Hannah">
                                         <label for="student1">Hannah Brooks</label><br><br>
-                                        <input type="checkbox" id="student2" name="student2" value="Zach Crews">
+                                        <input type="checkbox" id="student2" name="student_list" value="Zach">
                                         <label for="student2">Zach Crews</label><br><br>
-                                        <input type="checkbox" id="student3" name="student3" value="Matthew Scott">
+                                        <input type="checkbox" id="student3" name="student_list" value="Matthew">
                                         <label for="student3">Matthew Scott</label><br><br>
-                                        <input type="checkbox" id="student4" name="student4" value="Fred Pan">
+                                        <input type="checkbox" id="student4" name="student_list" value="Fred">
                                         <label for="student4">Fred Pan</label><br><br>
-                                        <input type="checkbox" id="student5" name="student4" value="Alec Lobanov">
+                                        <input type="checkbox" id="student5" name="student_list" value="Alec">
                                         <label for="student5">Alec Lobanov</label><br><br>
-                                        <input type="checkbox" id="student6" name="student4" value="Yufan Yang">
+                                        <input type="checkbox" id="student6" name="student_list" value="Yufan">
                                         <label for="student6">Yufan Yang</label><br><br>
                                     </div>
 

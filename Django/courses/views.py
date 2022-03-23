@@ -4,23 +4,6 @@ from .forms import CourseForm, TeamForm
 from django.core.mail import send_mail
 # Create your views here.
 def course_creation_view(request):
-	# form = CourseForm(request.POST or None)
-	# if form.is_valid():
-	# 	print("Form is valid")
-	# 	Course.objects.create(**form.cleaned_data)
-	# 	form.save()
-	# else:
-	# 	print("ERRORS")
-	# 	print(form.errors)
-	
-	# if request.method == "POST":
-	# 	name = request.POST.get('name')
-	# 	semester = request.POST.get('semester')
-	# 	year = request.POST.get('year')
-	# 	code = request.POST.get('code')
-	# 	num_teams = request.POST.get('num_teams')
-	# 	Course.objects.create(name=name, semester=semester, year=year, code=code)
-
 	form = CourseForm()
 	if request.method == "POST":
 		form = CourseForm(request.POST)
@@ -38,9 +21,9 @@ def team_creation_view(request):
 		form=TeamForm(request.POST)
 		if form.is_valid():
 			Team.objects.create(**form.cleaned_data)
+			return redirect('send_email')
 	context={'form':form}
-	redirect('send_email')
-	return render(request, "courses/team_create_test.html", context)
+	return render(request, "courses/team_create.html", context)
 
 
 def send_email(request):
