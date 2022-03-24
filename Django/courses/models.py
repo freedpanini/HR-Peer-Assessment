@@ -3,11 +3,11 @@ from multiselectfield import MultiSelectField
 # Create your models here.
 class Course(models.Model):
 	SEMESTERS = (
-        ('FALL', 'Fall'),
-        ('SPRING', 'Spring'),
-        ('SUMMER', 'Summer'),
-        ('WINTER', 'Winter')
-    )
+		('FALL', 'Fall'),
+		('SPRING', 'Spring'),
+		('SUMMER', 'Summer'),
+		('WINTER', 'Winter')
+	)
 	name 		= models.CharField(max_length=120, blank=False)
 	semester 	= models.CharField(max_length=10, choices=SEMESTERS)
 	year 		= models.DecimalField(max_digits=5,decimal_places=0, blank=False)
@@ -16,12 +16,12 @@ class Course(models.Model):
 
 class Team(models.Model):
 	STUDENT_LIST = (
-    	('Hannah', 'Hannah Brooks'),
-    	('Zach', 'Zach Crews'),
-    	('Matthew', 'Matthew Scott'),
-    	('Fred', 'Fred Pan'),
-    	('Alec', 'Alec Lobanov'),
-    	('Yufan', 'Yufan Yang')
+		('Hannah', 'Hannah Brooks'),
+		('Zach', 'Zach Crews'),
+		('Matthew', 'Matthew Scott'),
+		('Fred', 'Fred Pan'),
+		('Alec', 'Alec Lobanov'),
+		('Yufan', 'Yufan Yang')
 	)
 	team_name	= models.CharField(max_length=120)
 	student_list= MultiSelectField(choices=STUDENT_LIST)
@@ -31,5 +31,5 @@ class Team(models.Model):
 class StudentTeam(models.Model):
 	# Holds username
 	student 	= models.CharField(max_length=120,blank=False)
-	team_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
+	student_team_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
 
