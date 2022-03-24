@@ -12,7 +12,7 @@ class UserRegistrationForm(UserCreationForm):
     last_name = forms.CharField(max_length=101)
     email = forms.EmailField()
     occupation = forms.ChoiceField(choices= OCCUPATION_CHOICES)
-    class_code = forms.CharField(max_length=5)
+    class_code = forms.CharField(max_length=20)
 
     class Meta:
         model = User
