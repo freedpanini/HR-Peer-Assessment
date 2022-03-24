@@ -12,7 +12,8 @@ class UserRegistrationForm(UserCreationForm):
     last_name = forms.CharField(max_length=101)
     email = forms.EmailField()
     occupation = forms.ChoiceField(choices= OCCUPATION_CHOICES)
+    class_code = forms.CharField(max_length=5)
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2','occupation']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2','occupation', 'class_code']
