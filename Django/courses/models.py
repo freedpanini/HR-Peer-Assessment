@@ -1,6 +1,7 @@
 from django.db import models
 from multiselectfield import MultiSelectField
-# Create your models here.
+from custo
+
 class Course(models.Model):
 	SEMESTERS = (
 		('FALL', 'Fall'),
@@ -13,6 +14,7 @@ class Course(models.Model):
 	year 		= models.DecimalField(max_digits=5,decimal_places=0, blank=False)
 	code 		= models.CharField(max_length=30, blank=False)
 	course_id 	= models.AutoField(primary_key=True)
+	professor = models.EmailField(max_length=120,blank=False)
 
 class Team(models.Model):
 	STUDENT_LIST = (
@@ -27,9 +29,14 @@ class Team(models.Model):
 	student_list= MultiSelectField(choices=STUDENT_LIST)
 	team_id 	= models.AutoField(primary_key=True)
 
-# Database table to map student to teams/courses
-class StudentTeam(models.Model):
+# Database table to map students that have accepted invite to teams/courses
+class Registration(models.Model):
 	# Holds username
-	student 	= models.CharField(max_length=120,blank=False)
-	student_team_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
+	student 	= models.EmailField(max_length=120,blank=False)
+	team_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
+	course_id	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
 
+# Maps invited students to courses
+class Invitation(models.Model):
+	student 	= models.EmailField(max_length=120,blank=False)
+	course_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
