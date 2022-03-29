@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Course, Team, Invitation, Registration
+from .models import Course, Team, Invitation
 from .forms import CourseForm, TeamForm
 from django.core.mail import send_mail
 # Create your views here.
@@ -8,9 +8,8 @@ def course_creation_view(request):
 	if request.method == "POST":
 		form = CourseForm(request.POST)
 		if form.is_valid():
-			data = form.cleaned_data
-			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code']).course_id
-			invite_students(request, data, course_id)
+			invite_students(request, form.cleaned_data)
+			Course.objects.create(**form.cleaned_data)
 			return redirect('adminhome')
 
 	context = {'form':form}
@@ -31,22 +30,21 @@ def team_creation_view(request):
 	return render(request, "courses/team_create.html", context)
 
 
-def send_email(request, email, code, name):
-	send_mail(f'You\'ve been added to {name}! ',
+def send_email(request, email, code):
+	send_mail('You\'ve been added to a new course! ',
 	f'Hello there, this is an automated message. You have been added to a new course, course code: {code}. If you do not have an account, use the link below to register! http://127.0.0.1:8000/register/ ',
 	'Software Engineer HumanResources',
 	[email],
 	fail_silently=False)
 	return render(request, 'courses/send_email.html',{})
 
-def invite_students(request, data, course_id):
-	emails = data['emails']
+def invite_students(request, info):
+	emails = info.pop('emails')
+	code = info['code']
 	if emails is None or len(emails) == 0:
 		return
 	emails = emails.split(",")
 	for email in emails:
 		email = email.strip()
-		print(f"Creating invitation for student {email} for course {course_id}")
-		Invitation.objects.create(student=email, course_id=course_id)
-		print(f"Sending email to {email}")
-		send_email(request, email, data['code'], data['name'])
+		#Invitation.objects.create()
+		send_email(request, email, code)

@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Course Creation</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-primary">
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-7">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Course</h3></div>
+                            <div class="card-body">
+                                <form action = '.' method='POST'>
+                                    {% csrf_token %}
+                                    <div class="form-floating mb-3">
+                                        <input name="name" class="form-control" id="inputCourseName" type="text" placeholder="CSCI1001 " />
+                                        <label for="inputCourseName">Course Name</label>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-md-0">
+                                                <select name="semester" class="form-control" id="inputSemester" type="text" placeholder="Semester">
+                                                    <option value="SPRING">Spring</option>
+                                                    <option value="FALL">Fall</option>
+                                                    <option value="SUMMER">Summer</option>
+                                                    <option value="WINTER">Winter</option>
+                                                </select>
+                                                <label for="inputSemester">Semester</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input name="year" class="form-control" id="inputYear" type="number" placeholder="2022" min="2022" max="2026" />
+                                                <label for="inputYear">Year</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class = "row mb-3">
+                                        <div class = "col-md-6">
+                                            <div class = "form-floating mb-md-0">
+                                                <input name="code" class="form-control" id="inputCode" type="text" placeholder="Course Code" />
+                                                <label for="inputCode">Course Code</label>
+                                            </div>
+                                        </div>
+                                        <div class = "col-md-6">
+                                            <div class="form-floating">
+                                                <input name="num_teams" class="form-control" id="inputNumTeams" type="number" placeholder="5" min ="1" />
+                                                <label for="inputNumTeams">Number of Teams</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input name="emails" class="form-control" id="inputEmails" type="text" placeholder="crewsz@bc.edu" />
+                                        <label for="inputEmails">Student Emails (separated by commas)</label>
+                                    </div>
+                                    <div class="mt-4 mb-0">
+                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Create Course' class="btn btn-primary"></a></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="layoutAuthentication_footer">
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Human Resources</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<!-- <script src="js/scripts.js"></script> -->
+</body>
+</html>
