@@ -33,6 +33,6 @@ def send_email(request):
 	send_mail('You\'ve been added to a new course! ',
 	'Hello there, this is an automated message. You have been added to a new course, course code: ABCDEFG. If you do not have an account, use the link below to register! http://127.0.0.1:8000/register/ ',
 	'Software Engineer HumanResources',
-	['yangalm@bc.edu'],
+	['yangalm@bc.edu','panfr@bc.edu','brooksha@bc.edu','crewsz@bc.edu','scottfe@bc.edu','lobanov@bc.edu'],
 	fail_silently=False)
 	return render(request, 'courses/send_email.html',{})
