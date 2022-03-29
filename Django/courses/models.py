@@ -1,6 +1,5 @@
 from django.db import models
 from multiselectfield import MultiSelectField
-from custo
 
 class Course(models.Model):
 	SEMESTERS = (
@@ -14,7 +13,7 @@ class Course(models.Model):
 	year 		= models.DecimalField(max_digits=5,decimal_places=0, blank=False)
 	code 		= models.CharField(max_length=30, blank=False)
 	course_id 	= models.AutoField(primary_key=True)
-	professor = models.EmailField(max_length=120,blank=False)
+	#professor = models.EmailField(max_length=120)
 
 class Team(models.Model):
 	STUDENT_LIST = (
