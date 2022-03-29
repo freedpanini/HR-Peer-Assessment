@@ -59,3 +59,6 @@ def invite_students(request, data, course_id):
 def accept_invite(request, student, course_id):
 	Invitation.objects.get(student=student, course_id=course_id).delete()
 	Registration.objects.create(student=student,course_id=course_id,team_id=0)
+
+def decline_invite(request, student, course_id):
+	Invitation.objects.get(student=student, course_id=course_id).delete()
