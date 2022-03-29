@@ -6,6 +6,7 @@ class CourseForm(forms.Form):
 	semester 	= forms.CharField(required=True)
 	year		= forms.DecimalField(required=True)
 	code 		= forms.CharField(required=True)
+	emails 		= forms.CharField()
 	
 class TeamForm(forms.ModelForm):
 	STUDENT_LIST = (
