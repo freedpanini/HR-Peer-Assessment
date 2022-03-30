@@ -4,7 +4,9 @@
 		<title> Email Sent! </title>
 	</head>
 	<body>
-
+	<form action = '.' method='POST'>
+        {% csrf_token %}
 		Email Sent Successfully!
+	</form>
 	</body>
 	</html>

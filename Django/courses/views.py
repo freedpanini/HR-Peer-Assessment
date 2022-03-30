@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Course, Team, Invitation, Registration
 from .forms import CourseForm, TeamForm
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
@@ -21,7 +23,6 @@ def team_creation_view(request):
 	form=TeamForm()
 	if request.method=="POST":
 		teamname=request.POST.get('teamname')
-		
 		form=TeamForm(request.POST)
 		if form.is_valid():
 			Team.objects.create(**form.cleaned_data)
@@ -32,19 +33,16 @@ def team_creation_view(request):
 
 
 def send_email(request, emails, code, name):
+	ctx={
+		'name':name,
+		'code':code,
+	}
+	message=render_to_string('courses/email.html',ctx)
 	send_mail(f'You\'ve been added to {name}! ',
-	f'Hello there, this is an automated message. You have been added to a new course, course code: {code}. If you do not have an account, use the link below to register! http://127.0.0.1:8000/register/ ',
-	'Software Engineer HumanResources',
-<<<<<<< HEAD
-<<<<<<< HEAD
-	['yangalm@bc.edu','panfr@bc.edu','brooksha@bc.edu','crewsz@bc.edu','scottfe@bc.edu','lobanov@bc.edu'],
-=======
-	[email],
->>>>>>> 15a4e1763f93e27ee50b1e670615c5056c03338a
-=======
+	message,
+	settings.EMAIL_HOST_USER,
 	emails,
->>>>>>> 4d434110aa2a7c8f0066adaef7bbd64f74fcb8bb
-	fail_silently=False)
+	fail_silently=False,html_message=message)
 	return render(request, 'courses/send_email.html',{})
 
 def invite_students(request, data, course_id):
