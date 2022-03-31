@@ -17,7 +17,11 @@ def home_view(request):
     #https://stackoverflow.com/questions/36631419/display-data-from-a-database-in-a-html-page-using-django
     """
     print(request.user.email)
-    registrations = Registration.objects.filter(student=request.user.email)
+    print(request.user)
+    if not request.user.is_staff:
+        registrations = Registration.objects.filter(student=request.user.email)
+    else:
+        registrations = Course.objects.filter(professor=request.user.email)
     print(registrations)
     courses = Course.objects.all()
     data = {

@@ -11,7 +11,7 @@ def course_creation_view(request):
 		form = CourseForm(request.POST)
 		if form.is_valid():
 			data = form.cleaned_data
-			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code']).course_id
+			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code'],professor=request.user.email).course_id
 			invite_students(request, data, course_id)
 			return redirect('home')
 
