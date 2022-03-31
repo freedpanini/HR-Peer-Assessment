@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from courses.models import Course
+from courses.models import Course, Registration
 from .forms import UserRegistrationForm
 
 def home_view(request):
@@ -16,9 +16,12 @@ def home_view(request):
     #objects are Course, Team, Registration, Invitation
     #https://stackoverflow.com/questions/36631419/display-data-from-a-database-in-a-html-page-using-django
     """
+    print(request.user.email)
+    registrations = Registration.objects.filter(student=request.user.email)
+    print(registrations)
     courses = Course.objects.all()
     data = {
-        "course_list": courses
+        "course_list": registrations
     }
     if not request.user.is_authenticated:
         return redirect('/login')

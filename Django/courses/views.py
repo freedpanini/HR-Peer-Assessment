@@ -13,7 +13,7 @@ def course_creation_view(request):
 			data = form.cleaned_data
 			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code']).course_id
 			invite_students(request, data, course_id)
-			return redirect('adminhome')
+			return redirect('home')
 
 	context = {'form':form}
 	return render(request, "courses/course_create.html", context)

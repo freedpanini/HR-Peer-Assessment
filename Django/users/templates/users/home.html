@@ -28,12 +28,7 @@
             </div>
                 <!-- Course Title-->
             <div class="col">
-                {% if user.is_staff%}
-                <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>CSCI 3356 - Admin View</strong></h1>
-                {% endif %}
-                {% if not user.is_staff %}
-                <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>CSCI 3356 - Student View</strong></h1>
-                {% endif %}
+                <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>CSCI 3356</strong></h1>
             </div>  
             <!-- Logout dropdown-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -54,26 +49,14 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Courses</div>
-                            <a class="nav-link" href="index.html">
+                            {% for course in course_list %}
+                            <a class="nav-link" href="home">
                                 <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
-                                CSCI 3356
+                                {{ course.course_id }}
                             </a>
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
-                                CSCI 1101
-                            </a>
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
-                                CSCI 3383
-                            </a>
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
-                                CSCI 4911
-                            </a>
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
-                                CSCI 3394
-                            </a>
+                            {% empty %}
+                            <div>No courses for this user</div>
+                            {% endfor %}
                             {% if user.is_staff%}
                             <a class = "nav-link" href="{% url 'create_course' %}">
                                 <button class="btn btn-transparent btn-lg">
