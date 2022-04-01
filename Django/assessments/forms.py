@@ -2,7 +2,7 @@ from django import forms
 from .models import PeerAssessment, Question, Option
 
 
-class SurveyForm(forms.ModelForm):
+class PeerAssessmentForm(forms.ModelForm):
     class Meta:
         model = PeerAssessment
         fields = ["title"]

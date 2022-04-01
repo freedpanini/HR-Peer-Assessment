@@ -7,7 +7,7 @@ class PeerAssessment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Question(models.Model):
-    survey = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
+    peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
     question = models.CharField(max_length=256)
 
 class Option(models.Model):
