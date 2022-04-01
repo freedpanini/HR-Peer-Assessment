@@ -12,7 +12,7 @@ class Question(models.Model):
 
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    text = models.CharField(max_length=256)
+    option_text = models.CharField(max_length=256)
 
 class Submission(models.Model):
     survey = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
