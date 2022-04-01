@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import PeerAssessment, Question, Answer, Submission
 from .forms import PeerAssessmentForm, QuestionForm, OptionForm
 
@@ -15,3 +15,17 @@ def create_assessment(request):
         form = PeerAssessmentForm()
 
     return render(request, "create_assessment.html", {"form": form})
+
+def create_question(request, pk):
+    peer_assessment = get_object_or_404(PeerAssessment, pk=pk, creator=request.user)
+    if request.method == "POST":
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.peer_assessment = peer_assessment
+            question.save()
+            return redirect("", peer_assessment_pk=pk, question_pk=question.pk)
+    else:
+        form = QuestionForm()
+
+    return render(request, "create_question.html", {"survey": peer_assessment, "form": form})
