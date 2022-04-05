@@ -15,7 +15,7 @@ def create_assessment(request):
             peer_assessment = form.save(commit=False)
             #peer_assessment.creator = request.user
             peer_assessment.save()
-            return redirect("home")
+            return render(request, "assessments/create_question.html", {"survey": peer_assessment, "form": form})
     else:
         form = PeerAssessmentForm()
 
