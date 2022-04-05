@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+#<<<<<<< HEAD
 
 # Create your views here.
 
-=======
+#=======
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import PeerAssessment, Question, Answer, Submission
 from .forms import PeerAssessmentForm, QuestionForm, OptionForm
@@ -19,7 +19,7 @@ def create_assessment(request):
     else:
         form = PeerAssessmentForm()
 
-    return render(request, "create_assessment.html", {"form": form})
+    return render(request, "assessments/create_assessment.html", {"form": form})
 
 def delete_assessment(request, pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=pk, creator=request.user)
@@ -40,11 +40,11 @@ def create_question(request, pk):
     else:
         form = QuestionForm()
 
-<<<<<<< HEAD
-    return render(request, "create_question.html", {"survey": peer_assessment, "form": form})
->>>>>>> 9205c97d5adcd1728a37465973aefdfcec741a7e
-=======
-    return render(request, "create_question.html", {"peer_assessment": peer_assessment, "form": form})
+#<<<<<<< HEAD
+    return render(request, "assessments/create_question.html", {"survey": peer_assessment, "form": form})
+#>>>>>>> #9205c97d5adcd1728a37465973aefdfcec741a7e
+#=======
+    return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form})
 
 def create_option(request, peer_assessment_pk, question_pk):
 
@@ -60,8 +60,8 @@ def create_option(request, peer_assessment_pk, question_pk):
         form = OptionForm()
 
     options = question.option_set.all()
-    return render(request, "peer_assessment/options.html", {
+    return render(request, "peer_assessment/create_options.html", {
         "peer_assessment": peer_assessment, "question": question, "options": options, "form": form
         },
     )
->>>>>>> 072ae749ab3ed257cf00ec560e2b1c14a6766544
+#>>>>>>> #072ae749ab3ed257cf00ec560e2b1c14a6766544

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'crispy_forms',
     'courses',
-    'multiselectfield'
+    'multiselectfield',
+    'assessments'
 ]
 
 MIDDLEWARE = [

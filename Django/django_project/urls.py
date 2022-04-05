@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from users import views as user_views
 from courses.views import course_creation_view, team_creation_view, send_email
+from assessments import views as assessment_views
 
 urlpatterns = [
     path('', user_views.home_view, name='home'),
@@ -29,5 +30,8 @@ urlpatterns = [
     path('assessment_summary/', user_views.summary_view, name = 'assessment_summary'),
     path('create_course/', course_creation_view, name="create_course"),
     path('create_team/',team_creation_view, name="create_team"),
-    path('send_email/', send_email, name="send_email")
+    path('send_email/', send_email, name="send_email"),
+    path('create_assessment/', assessment_views.create_assessment, name='create_assessment'),
+    path('create_options/', assessment_views.create_option, name= 'create_option'),
+    path('create_question/', assessment_views.create_question, name = 'create_question')
 ]
