@@ -33,6 +33,8 @@ urlpatterns = [
     path('create_team/',team_creation_view, name="create_team"),
     path('send_email/', send_email, name="send_email"),
     path('create_assessment/', assessment_views.create_assessment, name='create_assessment'),
+    path("<int:pk>/edit_assessment/", assessment_views.edit_assessment, name="edit_assessment"),
     path('<int:peer_assessment_pk>/<int:question_pk>/create_options/', assessment_views.create_option, name= 'create_option'),
-    path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question')
+    path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question'),
+    path("<int:survey_pk>/<int:question_pk>/create_options/",assessment_views.create_options,name="create_options"),
 ]

@@ -6,21 +6,43 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import PeerAssessment, Question, Answer, Submission
 from .forms import PeerAssessmentForm, QuestionForm, OptionForm
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
+
 
 # Create your views here.
+@login_required
 def create_assessment(request):
     if request.method == "POST":
         form = PeerAssessmentForm(request.POST)
         if form.is_valid():
             peer_assessment = form.save(commit=False)
-            #peer_assessment.creator = request.user
+            peer_assessment.creator = request.user
             peer_assessment.save()
-            return render(request, "assessments/create_question.html", {"survey": peer_assessment, "form": form})
+            return redirect("edit_assessment", pk=peer_assessment.id)
     else:
         form = PeerAssessmentForm()
 
     return render(request, "assessments/create_assessment.html", {"form": form})
 
+@login_required
+def edit_assessment(request, pk):
+    try:
+        survey = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
+            pk=pk, creator=request.user, is_active=False
+        )
+    except PeerAssessment.DoesNotExist:
+        raise Http404()
+
+    if request.method == "POST":
+        survey.is_active = True
+        survey.save()
+        return redirect("home", pk=pk)
+    else:
+        questions = survey.question_set.all()
+        return render(request, "assessments/edit_assessment.html", {"survey": survey, "questions": questions})
+
+@login_required
 def delete_assessment(request, pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=pk, creator=request.user)
     if request.method == "POST":
@@ -28,6 +50,7 @@ def delete_assessment(request, pk):
 
     return redirect("")
 
+@login_required
 def create_question(request, pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=pk)#, creator=request.user)
     if request.method == "POST":
@@ -36,7 +59,7 @@ def create_question(request, pk):
             question = form.save(commit=False)
             question.peer_assessment = peer_assessment
             question.save()
-            return redirect("home")#, peer_assessment_pk=pk, question_pk=question.pk)
+            return redirect("create_options", survey_pk=pk, question_pk=question.pk)
     else:
         form = QuestionForm()
 
@@ -46,7 +69,8 @@ def create_question(request, pk):
 #=======
     return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form})
 
-def create_option(request, peer_assessment_pk, question_pk):
+@login_required
+def create_options(request, peer_assessment_pk, question_pk):
 
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
     question = Question.objects.get(pk=question_pk)
