@@ -112,31 +112,9 @@
                         <div class="ui center aligned basic very padded segment">
     <h1 class="ui header">Create a new survey</h1>
     <div class="ui container left aligned">
-        <form class="ui form {% if form.errors %}error{% endif %}" method="post" novalidate>
+        <form style="display: inline-block;" method="post">
             {% csrf_token %}
-            {% for field in form %}
-            <div class="field {% if field.errors %}error{% endif %}">
-                <label>{{ field.label_tag }}</label>
-                {{ field }}
-            </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary ">Create</button>
-            <a href = "{% url 'create_assessment' %}">
-                <div class="btn btn-secondary">Cancel</div>
-            </a>
-            <!--<div class="ui message error">
-                <div class="header">We had some issues</div>
-                <ul class="list">
-                    {% for field in form %}
-                    {% for error in field.errors %}
-                    <li>{{ field.label_tag }} {{ error }}</li>
-                    {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>-->
+            <button type="submit" class="ui primary button">Activate survey</button>
         </form>
     </div>
 </div>
