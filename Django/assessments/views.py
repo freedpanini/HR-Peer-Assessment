@@ -21,6 +21,13 @@ def create_assessment(request):
 
     return render(request, "create_assessment.html", {"form": form})
 
+def delete_assessment(request, pk):
+    peer_assessment = get_object_or_404(PeerAssessment, pk=pk, creator=request.user)
+    if request.method == "POST":
+        peer_assessment.delete()
+
+    return redirect("")
+
 def create_question(request, pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=pk, creator=request.user)
     if request.method == "POST":
@@ -33,5 +40,28 @@ def create_question(request, pk):
     else:
         form = QuestionForm()
 
+<<<<<<< HEAD
     return render(request, "create_question.html", {"survey": peer_assessment, "form": form})
 >>>>>>> 9205c97d5adcd1728a37465973aefdfcec741a7e
+=======
+    return render(request, "create_question.html", {"peer_assessment": peer_assessment, "form": form})
+
+def create_option(request, peer_assessment_pk, question_pk):
+
+    peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
+    question = Question.objects.get(pk=question_pk)
+    if request.method == "POST":
+        form = OptionForm(request.POST)
+        if form.is_valid():
+            option = form.save(commit=False)
+            option.question_id = question_pk
+            option.save()
+    else:
+        form = OptionForm()
+
+    options = question.option_set.all()
+    return render(request, "peer_assessment/options.html", {
+        "peer_assessment": peer_assessment, "question": question, "options": options, "form": form
+        },
+    )
+>>>>>>> 072ae749ab3ed257cf00ec560e2b1c14a6766544
