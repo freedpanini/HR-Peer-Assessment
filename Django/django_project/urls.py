@@ -20,8 +20,9 @@ from courses.views import course_creation_view, team_creation_view, send_email
 from assessments import views as assessment_views
 
 urlpatterns = [
-    path('', user_views.home_view, name='home'),
-    path('home', user_views.home_view, name='home'),
+    path('', user_views.surveys_home_view, name='home'),
+    path('home', user_views.surveys_home_view, name='home'),
+    path('users', user_views.home_view, name='users'),
     path('logout/', user_views.logout_view, name='login'),
     path('admin/', admin.site.urls),
     path('login/', user_views.login_view, name='login'),
@@ -32,6 +33,6 @@ urlpatterns = [
     path('create_team/',team_creation_view, name="create_team"),
     path('send_email/', send_email, name="send_email"),
     path('create_assessment/', assessment_views.create_assessment, name='create_assessment'),
-    path('<int:pk>/create_options/', assessment_views.create_option, name= 'create_option'),
+    path('<int:peer_assessment_pk>/<int:question_pk>/create_options/', assessment_views.create_option, name= 'create_option'),
     path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question')
 ]
