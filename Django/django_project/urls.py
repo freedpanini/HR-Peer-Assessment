@@ -19,9 +19,8 @@ from users import views as user_views
 from courses.views import course_creation_view, team_creation_view, send_email
 
 urlpatterns = [
-    path('', user_views.student_home_view, name='studenthome'),
-    path('adminhome/', user_views.admin_home_view, name='adminhome'),
-    path('studenthome/', user_views.student_home_view, name='studenthome'),
+    path('', user_views.home_view, name='home'),
+    path('home', user_views.home_view, name='home'),
     path('logout/', user_views.logout_view, name='login'),
     path('admin/', admin.site.urls),
     path('login/', user_views.login_view, name='login'),

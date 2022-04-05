@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from courses.models import Course, Registration
 from .forms import UserRegistrationForm
 
 def home_view(request):
@@ -10,17 +11,26 @@ def home_view(request):
     else:
         return render(request, 'users/home.html')
 
-def admin_home_view(request):
+def home_view(request):
+    """
+    #objects are Course, Team, Registration, Invitation
+    #https://stackoverflow.com/questions/36631419/display-data-from-a-database-in-a-html-page-using-django
+    """
+    print(request.user.email)
+    print(request.user)
+    if not request.user.is_staff:
+        registrations = Registration.objects.filter(student=request.user.email)
+    else:
+        registrations = Course.objects.filter(professor=request.user.email)
+    print(registrations)
+    courses = Course.objects.all()
+    data = {
+        "course_list": registrations
+    }
     if not request.user.is_authenticated:
         return redirect('/login')
     else:
-        return render(request, 'users/adminhome.html')
-
-def student_home_view(request):
-    if not request.user.is_authenticated:
-        return redirect('/login')
-    else:
-        return render(request, 'users/studenthome.html')
+        return render(request, 'users/home.html', data)
 
 def assessment_view(request):
     if not request.user.is_authenticated:
@@ -40,10 +50,7 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        if user.is_staff:
-            return redirect('adminhome') #redirects to home
-        else:
-            return redirect('studenthome')
+        return redirect('home')
     else:
         if request.method != 'GET':
             print('did not work')
