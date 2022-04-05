@@ -50,12 +50,12 @@
         {% for question in questions %}
         <div class="ui basic padded segment">
             <h4 class="ui header">
-                Question {{ forloop.counter }} / {{ questions|length }}: {{ question.prompt }}
+                Question {{ forloop.counter }} / {{ questions|length }}: {{ question.question }}
             </h4>
-            <ul>
+            <ul style="list-style-type: none;">
                 {% for option in question.option_set.all %}
                 <li>
-                    {{ forloop.counter }}) {{option.text}}
+                    {{ forloop.counter }}) {{option.option_text}}
                 </li>
                 {% endfor %}
             </ul>

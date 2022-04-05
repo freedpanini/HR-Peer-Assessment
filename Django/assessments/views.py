@@ -59,15 +59,11 @@ def create_question(request, pk):
             question = form.save(commit=False)
             question.peer_assessment = peer_assessment
             question.save()
-            return redirect("create_options", survey_pk=pk, question_pk=question.pk)
+            return redirect("create_options", peer_assessment_pk=pk, question_pk=question.pk)
     else:
         form = QuestionForm()
 
-#<<<<<<< HEAD
     return render(request, "assessments/create_question.html", {"survey": peer_assessment, "form": form})
-#>>>>>>> #9205c97d5adcd1728a37465973aefdfcec741a7e
-#=======
-    return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form})
 
 @login_required
 def create_options(request, peer_assessment_pk, question_pk):
@@ -84,8 +80,7 @@ def create_options(request, peer_assessment_pk, question_pk):
         form = OptionForm()
 
     options = question.option_set.all()
-    return render(request, "peer_assessment/create_options.html", {
+    return render(request, "assessments/create_options.html", {
         "peer_assessment": peer_assessment, "question": question, "options": options, "form": form
         },
     )
-#>>>>>>> #072ae749ab3ed257cf00ec560e2b1c14a6766544
