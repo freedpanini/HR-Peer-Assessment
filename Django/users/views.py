@@ -16,8 +16,9 @@ def home_view(request):
     #objects are Course, Team, Registration, Invitation
     #https://stackoverflow.com/questions/36631419/display-data-from-a-database-in-a-html-page-using-django
     """
-    print(request.user.email)
-    print(request.user)
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    
     if not request.user.is_staff:
         registrations = Registration.objects.filter(student=request.user.email)
     else:
@@ -27,10 +28,12 @@ def home_view(request):
     data = {
         "course_list": registrations
     }
+    return render(request, 'users/home.html', data)
+
+def surveys_home_view(request):
     if not request.user.is_authenticated:
         return redirect('/login')
-    else:
-        return render(request, 'users/home.html', data)
+    return render(request, 'users/surveys_home.html')
 
 def assessment_view(request):
     if not request.user.is_authenticated:
