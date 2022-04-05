@@ -55,7 +55,7 @@
                                 {{ course.name }}
                             </a>
                             {% empty %}
-                            <div>No courses for this user</div>
+                            <div style="margin-left:5%">No courses for this user</div>
                             {% endfor %}
                             {% if user.is_staff%}
                             <a class = "nav-link" href="{% url 'create_course' %}">
@@ -70,6 +70,10 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
+                    {% block core_content %}
+                    <div class="container-fluid px-4">
+                        Hello
+                    </div>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Course Roster</h1>
                         <div class="card mb-4">
@@ -151,6 +155,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endblock %}
                 </main>
             </div>
         </div>

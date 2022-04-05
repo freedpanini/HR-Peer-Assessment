@@ -54,7 +54,7 @@ def invite_students(request, data, course_id):
 	while i < len(emails):
 		emails[i] = emails[i].strip()
 		# prevent duplicate invitations
-		if Invitation.objects.filter(student=emails[i], course_id=course_id).count() == 0:
+		if Invitation.objects.filter(student=emails[i], course_id=course_id).count() == 0 and Registration.objects.filter(student=emails[i], course_id=course_id).count() == 0:
 			Invitation.objects.create(student=emails[i], course_id=course_id)
 		else:
 			emails.pop(i)
