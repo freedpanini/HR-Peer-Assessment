@@ -13,9 +13,9 @@ def create_assessment(request):
         form = PeerAssessmentForm(request.POST)
         if form.is_valid():
             peer_assessment = form.save(commit=False)
-            peer_assessment.creator = request.user
+            #peer_assessment.creator = request.user
             peer_assessment.save()
-            return redirect("", pk=peer_assessment.id)
+            return redirect("home")
     else:
         form = PeerAssessmentForm()
 

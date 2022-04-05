@@ -9,7 +9,7 @@ def get_week_ahead():
 class PeerAssessment(models.Model):
     title = models.CharField(max_length=64)
     is_active = models.BooleanField(default=False)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    # creator = models.ForeignKey(User, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=get_week_ahead)
 
