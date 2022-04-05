@@ -29,14 +29,14 @@ def delete_assessment(request, pk):
     return redirect("")
 
 def create_question(request, pk):
-    peer_assessment = get_object_or_404(PeerAssessment, pk=pk, creator=request.user)
+    peer_assessment = get_object_or_404(PeerAssessment, pk=pk)#, creator=request.user)
     if request.method == "POST":
         form = QuestionForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
             question.peer_assessment = peer_assessment
             question.save()
-            return redirect("", peer_assessment_pk=pk, question_pk=question.pk)
+            return redirect("home")#, peer_assessment_pk=pk, question_pk=question.pk)
     else:
         form = QuestionForm()
 
