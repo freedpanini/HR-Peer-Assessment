@@ -69,11 +69,21 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
-                    {% block core_content %}
-                    <div class="container-fluid px-4">
-                        Hello
+                <main>                   
+                    {% if invitations.count > 0 %}
+                    <h2>Pending Invitations</h2>
+                    {% endif %}
+                    {% for invitation in invitations %}
+                    <div class="row mb-4 md-4">
+                        <form method="POST" action="{% url 'handle_invite' %}">
+                            {% csrf_token %}
+                            <label for="accept">{{ invitation.name }}</label>
+                            <button class="btn btn-primary btn-block" type="submit" value="{{invitation.course_id}}" name="accept">Accept</button>
+                            <button class="btn btn-secondary btn-block" type="submit" value="{{invitation.course_id}}" name="decline">Decline</button>
+                        </form>
                     </div>
+                    {% endfor %}     
+                    {% block core_content %}
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Course Roster</h1>
                         <div class="card mb-4">
