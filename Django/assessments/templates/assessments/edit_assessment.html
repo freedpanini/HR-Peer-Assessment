@@ -70,20 +70,21 @@
         </div>
         {% endfor %}
 
-        <a href="{% url 'create_question' peer_assessment.pk %}">
-            <div class="ui button">Add a question</div>
+        <a class="btn btn-primary" href="{% url 'create_question' peer_assessment.pk %}">
+            Add a question
         </a>
-        <a href="{% url 'create_free_response' peer_assessment.pk %}">
-            <div class="ui button">Add a free response</div>
+        <a class="btn btn-primary" href="{% url 'create_free_response' peer_assessment.pk %}">
+            Add a free response
         </a>
         {% if questions|length > 0 %}
-        <div class="ui divider"></div>
+        <div style="margin-bottom: 20px;" class="ui divider"></div>
         <form style="display: inline-block;" method="post">
             {% csrf_token %}
-            <button type="submit" class="ui primary button">Activate Peer Assessment</button>
+            <button type="submit" class="btn btn-success">Activate Peer Assessment</button>
         </form>
-        <a href="{% url 'assessments_list' %}">
-            <div class="ui button">Back</div>
+        <div style="margin-bottom: 20px;" class="ui divider"></div>
+        <a class="btn btn-secondary" href="{% url 'assessments_list' %}">
+           Back
         </a>
         {% endif %}
     </div>
