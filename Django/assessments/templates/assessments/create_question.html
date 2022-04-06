@@ -44,26 +44,26 @@
                 <main>
                     <div class="container-fluid px-4">
                         <div class="ui center aligned basic very padded segment">
-    <div class="ui center aligned basic very padded segment">
-        <h1 style="margin-bottom: 30px;" class="ui header">Create a new question</h1>
-        <div class="ui container left aligned">
-            <form class="ui form {% if form.errors %}error{% endif %}" method="post" novalidate>
-                {% csrf_token %}
-                {% for field in form %}
-                <div style="margin-bottom: 30px;" class="field {% if field.errors %}error{% endif %}">
-                    <label>{{ field.label_tag }}</label>
-                    {{ field }}
-                </div>
-                {% endfor %}
-                <div style="margin-bottom: 30px;">
-                    <button type="submit" class="btn btn-primary">Create Multiple Choice Question</button>
-                </div>
-                <a href = "{% url 'assessments_list' %}">
-                    <div class="btn btn-secondary">Cancel</div>
-                </a>
-            </form>
-        </div>
-    </div>
+                            <div class="ui center aligned basic very padded segment">
+                                <h1 style="margin-bottom: 30px;" class="ui header">Create a new question</h1>
+                                <div class="ui container left aligned">
+                                    <form class="ui form {% if form.errors %}error{% endif %}" method="post" novalidate>
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                        <div style="margin-bottom: 30px;" class="field {% if field.errors %}error{% endif %}">
+                                            <label>{{ field.label_tag }}</label>
+                                            {{ field }}
+                                        </div>
+                                        {% endfor %}
+                                        <div style="margin-bottom: 30px;">
+                                            <button type="submit" class="btn btn-primary">Create Multiple Choice Question</button>
+                                        </div>
+                                        <a href = "{% url 'assessments_list' %}">
+                                            <div class="btn btn-secondary">Cancel</div>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
 
 </html>
 

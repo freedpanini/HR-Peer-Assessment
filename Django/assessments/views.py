@@ -100,7 +100,7 @@ def create_free_response(request, peer_assessment_pk):
         form = FreeResponseForm()
         print("INVALID")
     return render(request, "assessments/create_free_response.html", {
-        "peer_assessment": peer_assessment } #, "question": question, "options": response, "form": form},
+        "peer_assessment": peer_assessment,  "form": form } #, "question": question, "options": response, "form": form},
     )        
 
 @login_required
