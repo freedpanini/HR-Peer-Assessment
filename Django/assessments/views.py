@@ -94,8 +94,11 @@ def create_free_response(request, peer_assessment_pk):
             question = form.save(commit=False)
             question.peer_assessment = peer_assessment
             question.save()
+            print("valid form saved")
+
     else: 
         form = FreeResponseForm()
+        print("INVALID")
     return render(request, "assessments/create_free_response.html", {
         "peer_assessment": peer_assessment } #, "question": question, "options": response, "form": form},
     )        

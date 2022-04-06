@@ -46,10 +46,22 @@
                     <div class="container-fluid px-4">
                         <div class="ui center aligned basic very padded segment">
                             <div class="ui center aligned basic very padded segment">
-                                <h1 class="ui header dividing">Add question</h1>
-                                <div class="ui container left aligned">                       <form>
-                                      <label for="question">Question:</label><br>
-                                      <input type="text" id="question" name="question"><br>
+                                <h1 class="ui header dividing">Add Free Response</h1>
+                                <div class="ui container left aligned">                       
+                                    <form class="ui form {% if form.errors %}error{% endif %}" method="post" novalidate>
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                        <div style="margin-bottom: 30px;" class="field {% if field.errors %}error{% endif %}">
+                                            <label>{{ field.label_tag }}</label>
+                                            {{ field }}
+                                        </div>
+                                        {% endfor %}
+                                        <div style="margin-bottom: 30px;">
+                                            <button type="submit" class="btn btn-primary">Create Free Response Question</button>
+                                        </div>
+                                        <a href = "{% url 'edit_assessment' peer_assessment.pk %}">
+                                            <div class="btn btn-secondary">Cancel</div>
+                                        </a>
                                     </form>
                                     <a href="{% url 'edit_assessment' peer_assessment.pk %}">
                                         <div class="ui button">Done</div>
