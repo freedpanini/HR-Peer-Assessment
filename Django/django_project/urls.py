@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users import views as user_views
-from courses.views import course_creation_view, team_creation_view, send_email
+from courses.views import course_creation_view, team_creation_view, send_email, handle_invite
+from assessments import views as assessment_views
 
 urlpatterns = [
-    path('', user_views.home_view, name='home'),
-    path('home', user_views.home_view, name='home'),
+    path('', user_views.surveys_home_view, name='home'),
+    path('home', user_views.surveys_home_view, name='home'),
+    path('users', user_views.home_view, name='users'),
     path('logout/', user_views.logout_view, name='login'),
     path('admin/', admin.site.urls),
     path('login/', user_views.login_view, name='login'),
@@ -29,5 +31,11 @@ urlpatterns = [
     path('assessment_summary/', user_views.summary_view, name = 'assessment_summary'),
     path('create_course/', course_creation_view, name="create_course"),
     path('create_team/',team_creation_view, name="create_team"),
-    path('send_email/', send_email, name="send_email")
+    path('send_email/', send_email, name="send_email"),
+    path('create_assessment/', assessment_views.create_assessment, name='create_assessment'),
+    path("<int:pk>/edit_assessment/", assessment_views.edit_assessment, name="edit_assessment"),
+    path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question'),
+    path("<int:peer_assessment_pk>/<int:question_pk>/create_options/", assessment_views.create_options, name="create_options"),
+    path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question'),
+    path('handle_invite', handle_invite, name='handle_invite')
 ]

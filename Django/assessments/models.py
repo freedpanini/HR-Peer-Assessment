@@ -1,10 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import datetime, timedelta
+
+def get_week_ahead():
+    return datetime.today() + timedelta(days=7)
 
 class PeerAssessment(models.Model):
     title = models.CharField(max_length=64)
     is_active = models.BooleanField(default=False)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE,default=None)
+    creation_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(default=get_week_ahead)
+
 
 class Question(models.Model):
     peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)

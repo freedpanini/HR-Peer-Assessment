@@ -8,7 +8,7 @@ class Course(models.Model):
 		('SUMMER', 'Summer'),
 		('WINTER', 'Winter')
 	)
-	name 		= models.CharField(max_length=120, blank=False)
+	name = models.CharField(max_length=120, blank=False)
 	semester 	= models.CharField(max_length=10, choices=SEMESTERS)
 	year 		= models.DecimalField(max_digits=5,decimal_places=0, blank=False)
 	code 		= models.CharField(max_length=30, blank=False)
@@ -34,8 +34,10 @@ class Registration(models.Model):
 	student 	= models.EmailField(max_length=120,blank=False)
 	team_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
 	course_id	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
+	name = models.CharField(max_length=120)
 
 # Maps invited students to courses
 class Invitation(models.Model):
 	student 	= models.EmailField(max_length=120,blank=False)
 	course_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
+	name = models.CharField(max_length=120)
