@@ -34,13 +34,21 @@ def edit_assessment(request, pk):
     except PeerAssessment.DoesNotExist:
         raise Http404()
 
+    try:
+        peer_assessment2 = PeerAssessment.objects.prefetch_related("freeresponse_set").get(
+            pk=pk, creator=request.user, is_active=False
+        )
+    except PeerAssessment.DoesNotExist:
+        raise Http404()
+
     if request.method == "POST":
         peer_assessment.is_active = True
         peer_assessment.save()
         return redirect("home", pk=pk)
     else:
         questions = peer_assessment.question_set.all()
-        return render(request, "assessments/edit_assessment.html", {"peer_assessment": peer_assessment, "questions": questions})
+        frees = peer_assessment2.freeresponse_set.all()
+        return render(request, "assessments/edit_assessment.html", {"peer_assessment": peer_assessment, "questions": questions, "frees":frees})
 
 @login_required
 def delete_assessment(request, pk):
