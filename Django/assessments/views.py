@@ -103,6 +103,7 @@ def create_free_response(request, peer_assessment_pk):
             question.peer_assessment = peer_assessment
             question.save()
             print("valid form saved")
+            return redirect("edit_assessment", pk=peer_assessment.pk)
 
     else: 
         form = FreeResponseForm()
