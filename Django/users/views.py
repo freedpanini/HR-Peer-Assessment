@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from courses.models import Course, Registration
+from courses.models import Course, Registration, Invitation
 from .forms import UserRegistrationForm
 
 def home_view(request):
@@ -20,14 +20,19 @@ def home_view(request):
         return redirect('/login')
     
     data = {
-        "course_list": get_user_registrations(request)
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request)
     }
     return render(request, 'users/home.html', data)
 
 def surveys_home_view(request):
     if not request.user.is_authenticated:
         return redirect('/login')
-    return render(request, 'users/surveys_home.html', {"course_list": get_user_registrations(request)})
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request)
+    }
+    return render(request, 'users/surveys_home.html', data)
 
 def assessment_view(request):
     if not request.user.is_authenticated:
@@ -83,3 +88,9 @@ def get_user_registrations(request):
     else:
         registrations = Registration.objects.filter(student=request.user.email)
     return registrations
+
+def get_user_invitations(request):
+    invitations = []
+    if not request.user.is_staff:
+        invitations = Invitation.objects.filter(student=request.user.email)
+    return invitations
