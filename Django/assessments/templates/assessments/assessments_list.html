@@ -61,7 +61,7 @@
                 {% for peer_assessment in peer_assessments %}
                 <tr>
                     <td>{{ peer_assessment.title }}</td>
-                    <td>{{ peer_assessment.created_at }}</td>
+                    <td>{{ peer_assessment.creation_date }}</td>
                     <td>
                         {% if peer_assessment.is_active %}
                         <!-- <a href="{% url 'assessment-detail' peer_assessment.pk %}">
