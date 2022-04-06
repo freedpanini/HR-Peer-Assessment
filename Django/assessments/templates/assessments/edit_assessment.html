@@ -50,7 +50,7 @@
         {% for question in questions %}
         <div class="ui basic padded segment">
             <h4 class="ui header">
-                Question {{ forloop.counter }} / {{ questions|length }}: {{ question.question }}
+                MC Question {{ forloop.counter }} / {{ questions|length }}: {{ question.question }}
             </h4>
             <ul style="list-style-type: none;">
                 {% for option in question.option_set.all %}
@@ -61,20 +61,30 @@
             </ul>
         </div>
         {% endfor %}
-        <a href="{% url 'create_question' peer_assessment.pk %}">
-            <div class="ui button">Add a question</div>
+
+        {% for free in frees %}
+        <div class="ui basic padded segment">
+            <h4 class="ui header">
+                Free Response {{ forloop.counter }} / {{ frees|length }}: {{ free.response }}
+            </h4>
+        </div>
+        {% endfor %}
+
+        <a class="btn btn-primary" href="{% url 'create_question' peer_assessment.pk %}">
+            Add a question
         </a>
-        <a href="{% url 'create_free_response' peer_assessment.pk %}">
-            <div class="ui button">Add a free response</div>
+        <a class="btn btn-primary" href="{% url 'create_free_response' peer_assessment.pk %}">
+            Add a free response
         </a>
         {% if questions|length > 0 %}
-        <div class="ui divider"></div>
+        <div style="margin-bottom: 20px;" class="ui divider"></div>
         <form style="display: inline-block;" method="post">
             {% csrf_token %}
-            <button type="submit" class="ui primary button">Activate Peer Assessment</button>
+            <button type="submit" class="btn btn-success">Activate Peer Assessment</button>
         </form>
-        <a href="{% url 'assessments_list' %}">
-            <div class="ui button">Back</div>
+        <div style="margin-bottom: 20px;" class="ui divider"></div>
+        <a class="btn btn-secondary" href="{% url 'assessments_list' %}">
+           Back
         </a>
         {% endif %}
     </div>

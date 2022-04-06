@@ -31,6 +31,6 @@ class Answer(models.Model):
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
 
 class FreeResponse(models.Model):
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+    peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE, default=None)
     response = models.CharField(max_length=256)
 
