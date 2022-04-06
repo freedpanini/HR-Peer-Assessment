@@ -89,13 +89,13 @@ def create_options(request, peer_assessment_pk, question_pk):
 def create_free_response(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
     if request.method == 'POST':
-        form = FreeResponse(request.POST)
+        form = FreeResponseForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
             question.peer_assessment = peer_assessment
             question.save()
     else: 
-        form = FreeResponse()
+        form = FreeResponseForm()
     return render(request, "assessments/create_free_response.html", {
         "peer_assessment": peer_assessment, "question": question, "options": response, "form": form
         },

@@ -13,7 +13,7 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ["question"]
 
-class FreeResponse(forms.ModelForm):
+class FreeResponseForm(forms.ModelForm):
     class Meta:
         model = FreeResponse
         fields = ["response"]
