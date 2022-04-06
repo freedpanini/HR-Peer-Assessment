@@ -84,3 +84,27 @@ def create_options(request, peer_assessment_pk, question_pk):
         "peer_assessment": peer_assessment, "question": question, "options": options, "form": form
         },
     )
+@login_required
+def create_free_response(request, peer_assessment_pk, question_pk):
+    peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
+    question = Question.objects.get(pk=question_pk)
+    if request.method == 'POST':
+        form = FreeResponse(request.POST)
+        if form.is_valid():
+            response = form.save(commit=False)
+            form.save()
+    else: 
+        form = FreeResponse()
+    return render(request, "assessments/create_free_response.html", {
+        "peer_assessment": peer_assessment, "question": question, "options": response, "form": form
+        },
+    )        
+
+
+
+
+
+
+
+
+
