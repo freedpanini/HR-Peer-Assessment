@@ -40,30 +40,199 @@
                 </li>
             </ul>
         </nav>
-       
+        <!-- <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Courses</div>
+                            <a class="nav-link" href="/peer_assessment">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                CSCI 3356
+                            </a>
+                            <a class="nav-link" href="/assessment_summary">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                CSCI 1101
+                            </a>
+                            <a class="nav-link" href="index.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                CSCI 3383
+                            </a>
+                            <a class="nav-link" href="index.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                CSCI 4911
+                            </a>
+                            <a class="nav-link" href="index.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                CSCI 3394
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
+                                </nav>
+                            </div>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Authentication
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
+                                        </nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">401 Page</a>
+                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="500.html">500 Page</a>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Student
+                    </div>
+                </nav>
+            </div> -->
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
                         <div class="ui center aligned basic very padded segment">
-                        <h1 style="margin-bottom: 30px;" class="ui header">Create a new Peer Assessment</h1>
-                        <div class="ui container left aligned">
-                            <form class="ui form {% if form.errors %}error{% endif %}" method="post" novalidate>
-                                {% csrf_token %}
-                                {% for field in form %}
-                                <div style="margin-bottom: 30px;" class="field {% if field.errors %}error{% endif %}">
-                                    <label>{{ field.label_tag }}</label>
-                                    {{ field }}
-                                </div>
-                                {% endfor %}
-                                <button type="submit" class="btn btn-primary">Create</button>
-                                <a href = "{% url 'assessments_list' %}">
-                                    <div class="btn btn-secondary">Cancel</div>
-                                </a>
-                                
-                            </form>
+    <h1 class="ui header">Create a new survey</h1>
+    <div class="ui container left aligned">
+        <form class="ui form {% if form.errors %}error{% endif %}" method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="field {% if field.errors %}error{% endif %}">
+                <label>{{ field.label_tag }}</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <button type="submit" class="ui primary button">Create</button>
+            <a href = "{% url 'create_assessment' %}">
+                <div class="ui button">Cancel</div>
+            </a>
+            <!--<div class="ui message error">
+                <div class="header">We had some issues</div>
+                <ul class="list">
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                    <li>{{ field.label_tag }} {{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>-->
+        </form>
+    </div>
+</div>
+                        <!--<ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Name of Student Being Evaluated</li>
+                        </ol>
+                        <div class="row">
                         </div>
-                    </div>
-                        
+                        <table class="striped-columns border">-->
+    <!--<table class = 'table-striped' id = 'datatablesSimple'>-->
+    <!--<thead>
+        <tr>
+            <th>Likert Scale Questions</th>
+            <th>Strongly Disagree</th>
+            <th>Disagree</th>
+            <th>Neither Agree nor Disagree</th>
+            <th>Agree</th>
+            <th>Strongly Agree</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>He/she adequately fulfills the assigned tasks?</td>
+            <td><input type="radio" value="1" name="tasks"/></td>
+            <td><input type="radio" value="2" name="tasks"/></td>
+            <td><input type="radio" value="3" name="tasks"/></td>
+            <td><input type="radio" value="4" name="tasks"/></td>
+            <td><input type="radio" value="5" name="tasks"/></td>
+        </tr>
+        <tr>
+            <td>He/she assumes the project as a team effort, providing support in project tasks?</td>
+            <td><input type="radio" value="1" name="team"/></td>
+            <td><input type="radio" value="2" name="team"/></td>
+            <td><input type="radio" value="3" name="team"/></td>
+            <td><input type="radio" value="4" name="team"/></td>
+            <td><input type="radio" value="5" name="team"/></td>
+        </tr>
+        <tr>
+            <td>He/she demonstrates initiative to achieve project success?</td>
+            <td><input type="radio" value="1" name="initiative"/></td>
+            <td><input type="radio" value="2" name="initiative"/></td>
+            <td><input type="radio" value="3" name="initiative"/></td>
+            <td><input type="radio" value="4" name="initiative"/></td>
+            <td><input type="radio" value="5" name="initiative"/></td>
+        </tr>
+        <tr>
+            <td>He/she fulfills his/her assignments properly, working transparently and in coordination with the rest of the team?</td>
+            <td><input type="radio" value="1" name="coordination"/></td>
+            <td><input type="radio" value="2" name="coordination"/></td>
+            <td><input type="radio" value="3" name="coordination"/></td>
+            <td><input type="radio" value="4" name="coordination"/></td>
+            <td><input type="radio" value="5" name="coordination"/></td>
+        </tr>
+        <tr>
+            <td>He/she has maintained good communication with the client, generating value to project execution.</td>
+            <td><input type="radio" value="1" name="communication"/></td>
+            <td><input type="radio" value="2" name="communication"/></td>
+            <td><input type="radio" value="3" name="communication"/></td>
+            <td><input type="radio" value="4" name="communication"/></td>
+            <td><input type="radio" value="5" name="communication"/></td>
+        </tr>
+        <tr>
+            <td>He/she is able to seek help when there are problems.</td>
+            <td><input type="radio" value="1" name="helpful"/></td>
+            <td><input type="radio" value="2" name="helpful"/></td>
+            <td><input type="radio" value="3" name="helpful"/></td>
+            <td><input type="radio" value="4" name="helpful"/></td>
+            <td><input type="radio" value="5" name="helpful"/></td>
+        </tr>
+        <tr>
+            <td>He/she shows a communicative attitude facilitating the teamwork.</td>
+            <td><input type="radio" value="1" name="comm2"/></td>
+            <td><input type="radio" value="2" name="comm2"/></td>
+            <td><input type="radio" value="3" name="comm2"/></td>
+            <td><input type="radio" value="4" name="comm2"/></td>
+            <td><input type="radio" value="5" name="comm2"/></td>
+        </tr>
+        <tr>
+            <td>He/she is able to admit to mistakes and accept criticism.</td>
+            <td><input type="radio" value="1" name="mistakes"/></td>
+            <td><input type="radio" value="2" name="mistakes"/></td>
+            <td><input type="radio" value="3" name="mistakes"/></td>
+            <td><input type="radio" value="4" name="mistakes"/></td>
+            <td><input type="radio" value="5" name="mistakes"/></td>
+        </tr>
+    </tbody>
+</table>
+<h5 class="mt-4">Free Response Questions</h5>
+<label for="name">List his/her strengths that you saw during the development of this project</label>
+
+<input type="text" id="name" name="name" required
+       minlength="10" maxlength="10000" size="100">
+<label for="name">List his/her weakness that you saw during the development of this project</label>
+
+<input type="text" id="name" name="name" required
+       minlength="10" maxlength="100000" size="100">-->
                     </div>
                 </main>
             </div>

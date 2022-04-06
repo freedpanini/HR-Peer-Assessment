@@ -5,7 +5,7 @@
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import PeerAssessment, Question, Answer, Submission
-from .forms import PeerAssessmentForm, QuestionForm, OptionForm
+from .forms import PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
@@ -97,8 +97,7 @@ def create_free_response(request, peer_assessment_pk):
     else: 
         form = FreeResponseForm()
     return render(request, "assessments/create_free_response.html", {
-        "peer_assessment": peer_assessment, "question": question, "options": response, "form": form
-        },
+        "peer_assessment": peer_assessment } #, "question": question, "options": response, "form": form},
     )        
 
 @login_required
