@@ -1,5 +1,5 @@
 from django import forms
-from .models import PeerAssessment, Question, Option
+from .models import PeerAssessment, Question, Option, FreeResponse
 
 
 class PeerAssessmentForm(forms.ModelForm):
@@ -13,6 +13,10 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ["question"]
 
+class FreeResponse(forms.ModelForm):
+    class Meta:
+        model = FreeResponse
+        fields = ["response"]
 
 class OptionForm(forms.ModelForm):
     class Meta:
