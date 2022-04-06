@@ -28,19 +28,19 @@ def create_assessment(request):
 @login_required
 def edit_assessment(request, pk):
     try:
-        survey = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
+        peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
             pk=pk, creator=request.user, is_active=False
         )
     except PeerAssessment.DoesNotExist:
         raise Http404()
 
     if request.method == "POST":
-        survey.is_active = True
-        survey.save()
+        peer_assessment.is_active = True
+        peer_assessment.save()
         return redirect("home", pk=pk)
     else:
-        questions = survey.question_set.all()
-        return render(request, "assessments/edit_assessment.html", {"survey": survey, "questions": questions})
+        questions = peer_assessment.question_set.all()
+        return render(request, "assessments/edit_assessment.html", {"peer_assessment": peer_assessment, "questions": questions})
 
 @login_required
 def delete_assessment(request, pk):
@@ -63,7 +63,7 @@ def create_question(request, pk):
     else:
         form = QuestionForm()
 
-    return render(request, "assessments/create_question.html", {"survey": peer_assessment, "form": form})
+    return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form})
 
 @login_required
 def create_options(request, peer_assessment_pk, question_pk):
@@ -84,15 +84,16 @@ def create_options(request, peer_assessment_pk, question_pk):
         "peer_assessment": peer_assessment, "question": question, "options": options, "form": form
         },
     )
+
 @login_required
-def create_free_response(request, peer_assessment_pk, question_pk):
+def create_free_response(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
-    question = Question.objects.get(pk=question_pk)
     if request.method == 'POST':
         form = FreeResponse(request.POST)
         if form.is_valid():
-            response = form.save(commit=False)
-            form.save()
+            question = form.save(commit=False)
+            question.peer_assessment = peer_assessment
+            question.save()
     else: 
         form = FreeResponse()
     return render(request, "assessments/create_free_response.html", {
@@ -100,11 +101,8 @@ def create_free_response(request, peer_assessment_pk, question_pk):
         },
     )        
 
-
-
-
-
-
-
-
+@login_required
+def assessments_list(request):
+    peer_assessments = PeerAssessment.objects.filter(creator=request.user).order_by("-creation_date").all()
+    return render(request, "assessments/assessments_list.html", {"peer_assessments": peer_assessments})
 
