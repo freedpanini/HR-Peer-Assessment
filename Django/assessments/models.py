@@ -23,10 +23,14 @@ class Option(models.Model):
     option_text = models.CharField(max_length=256)
 
 class Submission(models.Model):
-    survey = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
+    peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
     is_complete = models.BooleanField(default=False)
-
 
 class Answer(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
+
+class FreeResponse(models.Model):
+    peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE, default=None)
+    response = models.CharField(max_length=256)
+
