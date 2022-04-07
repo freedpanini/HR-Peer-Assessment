@@ -28,61 +28,28 @@
                 Roster
             </div>
             <div class="card-body">
-                <table id="datatablesSimple">
+                {% if students %}
+                <table class="table" id="datatablesSimple">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Grade</th>
                             <th>Group</th>
-                            <th>Major</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for student in students %}
                         <tr>
-                            <td>Alec Lobanov</td>
-                            <td>Senior</td>
-                            <td>Human Resources</td>
-                            <td>BIOL-BS CSCI-BA</td>
+                            <td>{{student.first_name}} {{student.last_name}}</td>
+                            <td>{{student.team_name}}</td>
                             <td><i class="fa-solid fa-trash-can"></i></td>
                         </tr>
-                        <tr>
-                            <td>Fred Pan</td>
-                            <td>Senior</td>
-                            <td>Human Resources</td>
-                            <td>CSCI-BA ECON-BA</td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
-                        </tr>
-                        <tr>
-                            <td>Matthew Scott</td>
-                            <td>Senior</td>
-                            <td>Human Resources</td>
-                            <td>CSCI-BA ECON-BA</td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
-                        </tr>
-                        <tr>
-                            <td>Zachary Crews</td>
-                            <td>Junior</td>
-                            <td>Human Resources</td>
-                            <td>MGMT-BS MFIN</td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
-                        </tr>
-                        <tr>
-                            <td>Hannah Brooks</td>
-                            <td>Senior</td>
-                            <td>Human Resources</td>
-                            <td>MATH-BS CSCI-BA</td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
-                        </tr>
-                        <tr>
-                            <td>John Smith</td>
-                            <td>Sophomore</td>
-                            <td>Group X</td>
-                            <td>CSCI-BA</td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
+                {% else %}
+                <div style="margin-left:5%"><b>No students registered</b></div>
+                {% endif %}
                 {% if user.is_staff%}
                 <a class = "nav-link" href="{% url 'create_team' %}">
                     <button class="btn btn-transparent btn-lg"><i style="color:#6c757d" class="fas fa-solid fa-plus"></i></button>

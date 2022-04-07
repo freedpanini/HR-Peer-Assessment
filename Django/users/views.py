@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 from django.contrib import messages
-from courses.models import Course, Registration, Invitation
+from courses.models import Course, Registration, Invitation, Team
 from .forms import UserRegistrationForm
+from itertools import chain
 
 def home_view(request):
     if not request.user.is_authenticated:
@@ -18,15 +20,13 @@ def home_view(request):
     """
     if not request.user.is_authenticated:
         return redirect('/login')
-    
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request)
     }
-    print(type(data["course_list"][0].name))
     return render(request, 'users/home.html', data)
 
-def surveys_home_view(request, course=None):
+def surveys_home_view(request, course):
     if not request.user.is_authenticated:
         return redirect('/login')
     data = {
@@ -40,10 +40,25 @@ def surveys_home_view(request, course=None):
 def users_home_view(request, course):
     if not request.user.is_authenticated:
         return redirect('/login')
+    curr = Course.objects.get(name=course)
+    #locate all students registered in the current course
+    registered = Registration.objects.filter(course_id=curr.course_id)
+    registered_emails = [o.student for o in registered]
+    registered_teams = [o.team_id for o in registered]
+    #locate all user objects associated with registered students
+    students = User.objects.filter(email__in = registered_emails)
+    #locate all teams associated with registered students
+    print("stud",len(students))
+    if len(registered_teams) == 0:
+        registered_teams = [0]
+    teams = Team.objects.filter(team_id__in = registered_teams)
+    for i in range(len(students)):
+        students[i].team_name = teams[i].team_name
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request),
-        "current_course": course
+        "current_course": course,
+        "students": students
     }
 
     return render(request, 'users/users_home.html', data)
