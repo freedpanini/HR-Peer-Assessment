@@ -13,6 +13,7 @@ def course_creation_view(request):
 		if form.is_valid():
 			data = form.cleaned_data
 			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code'],professor=request.user.email).course_id
+			Team.objects.create(team_name="Default Team",student_list="",team_num=0,course_id=course_id)
 			invite_students(request, data, course_id, data['name'])
 			return redirect('home')
 
@@ -82,7 +83,8 @@ def accept_invite(request):
 	student=request.user.email
 	course_id = request.POST['accept']
 	invite = Invitation.objects.get(student=student, course_id=course_id)
-	Registration.objects.create(student=invite.student,course_id=invite.course_id,team_id=0,name=invite.name)
+	default_team_id = Team.objects.get(course_id=course_id,team_num=0).team_id
+	Registration.objects.create(student=invite.student,course_id=invite.course_id,name=invite.name,team_id=default_team_id)
 	invite.delete()
 	data = {
 		"course_list": get_user_registrations(request),

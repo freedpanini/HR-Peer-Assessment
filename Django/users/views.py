@@ -53,7 +53,8 @@ def users_home_view(request, course):
         registered_teams = [0]
     teams = Team.objects.filter(team_id__in = registered_teams)
     for i in range(len(students)):
-        students[i].team_name = teams[i].team_name
+        student_team_id = Registration.objects.get(student=students[i].email,course_id=curr.course_id).team_id
+        students[i].team_name = Team.objects.get(course_id=curr.course_id,team_id=student_team_id).team_name
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request),
