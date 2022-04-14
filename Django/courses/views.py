@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Course, Team, Invitation, Registration
+from .models import Course, Team, Invitation, Registration,Student
 from .forms import CourseForm, TeamForm
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -29,7 +29,7 @@ def team_creation_view(request):
 		if form.is_valid():
 			Team.objects.create(**form.cleaned_data)
 			return redirect('send_email')
-			
+	queryset= Student.objects.all()
 	context={'form':form}
 	return render(request, "courses/team_create.html", context)
 

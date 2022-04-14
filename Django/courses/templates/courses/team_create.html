@@ -33,6 +33,19 @@
                                     </div>
 
                                     <div>
+                                        <table>
+                                            {% for s in queryset%}
+                                        <tbody>
+                                            <tr>
+                                                <td>{{forloop.counter}}    </td>
+                                                <td> {{s.student_list}}    </td>
+
+                                            <tr>
+
+                                        
+                                    </tbody>
+                                    {% endfor %}
+                                    </table>
                                         <input type="checkbox" id="student1" name="student_list" value={{student}}>
                                         <label for="student1">Hannah Brooks</label><br><br>
                                         <input type="checkbox" id="student2" name="student_list" value="Zach">

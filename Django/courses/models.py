@@ -29,6 +29,10 @@ class Team(models.Model):
 	team_id 	= models.AutoField(primary_key=True)
 	team_num	= models.DecimalField(max_digits=3,decimal_places=0, blank=False, default=0)
 	course_id	= models.DecimalField(max_digits=20,decimal_places=0, blank=False, default=1)
+	
+# Storing student information:
+class Student(models.Model):
+	student_name= models.CharField(max_length=120,blank=False)
 
 # Database table to map students that have accepted invite to teams/courses
 class Registration(models.Model):
