@@ -7,6 +7,7 @@ from courses.models import Course, Registration, Invitation, Team
 from .forms import UserRegistrationForm
 from itertools import chain
 
+
 def home_view(request):
     if not request.user.is_authenticated:
         return redirect('/login')
@@ -26,40 +27,46 @@ def home_view(request):
     }
     return render(request, 'users/home.html', data)
 
-def surveys_home_view(request, course):
+def surveys_home_view(request, course_pk):
     if not request.user.is_authenticated:
         return redirect('/login')
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request),
-        "current_course": course
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name
     }
 
     return render(request, 'users/surveys_home.html', data)
 
-def users_home_view(request, course):
+
+def users_home_view(request, course_pk):
     if not request.user.is_authenticated:
         return redirect('/login')
-    curr = Course.objects.get(name=course)
-    #locate all students registered in the current course
-    registered = Registration.objects.filter(course_id=curr.course_id)
-    registered_emails = [o.student for o in registered]
-    registered_teams = [o.team_id for o in registered]
+    curr = Course.objects.get(course_id=course_pk)
+
+    #locate all student emails registered in the current course
+    registrations = Registration.objects.filter(course_id=curr.course_id)
+    student_emails = [o.student for o in registrations]
+
+    # Get course teams
+    teams = Team.objects.filter(course_id=curr.course_id)
+
     #locate all user objects associated with registered students
-    students = User.objects.filter(email__in = registered_emails)
-    #locate all teams associated with registered students
-    print("stud",len(students))
-    if len(registered_teams) == 0:
-        registered_teams = [0]
-    teams = Team.objects.filter(team_id__in = registered_teams)
-    for i in range(len(students)):
-        student_team_id = Registration.objects.get(student=students[i].email,course_id=curr.course_id).team_id
-        students[i].team_name = Team.objects.get(course_id=curr.course_id,team_id=student_team_id).team_name
+    students = User.objects.filter(email__in = student_emails)
+
+    for i in range(len(teams)):
+        team_students = registrations.filter(team_id=teams[i].team_id).values_list('student')
+        teams[i].students = students.filter(email__in = team_students)
+
+
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request),
-        "current_course": course,
-        "students": students
+        "current_course": course_pk,
+        "students": students,
+        "current_course_name": curr.name,
+        "teams": teams
     }
 
     return render(request, 'users/users_home.html', data)

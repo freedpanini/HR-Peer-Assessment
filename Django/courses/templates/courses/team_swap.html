@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Team Creation</title>
+    <title>Team Swap</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 </head>
@@ -19,17 +19,29 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Team</h3></div>
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Swap Team</h3></div>
                             <div class="card-body">
                                 <form action = '.' method='POST'>
                                     {% csrf_token %}
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" name="team_name" id="inputTeamName" type="text" placeholder="Team X" />
-                                        <label for="inputTeamName">Team Name</label>
+                                                <select name="student" class="form-control" id="inputStudent" type="text" placeholder="Student">
+                                                    {% for s in students %}
+                                                        <option value={{s.email}} {% if s.selected %} selected {% endif %}>{{s.first_name}} {{s.last_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <label for="inputStudent">Student</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                                <select name="team_id" class="form-control" id="inputTeamID" type="text" placeholder="New Team">
+                                                    {% for team in teams %}
+                                                        <option value={{team.team_id}} {% if team.selected %} selected {% endif %}>{{team.team_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <label for="inputTeamID">New Team</label>
                                     </div>
 
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Create Team' class="btn btn-primary"/></a></div>
+                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Swap' class="btn btn-primary"/></a></div>
                                     </div>
                                 </form>
                             </div>

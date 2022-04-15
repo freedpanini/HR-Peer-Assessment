@@ -49,7 +49,7 @@
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Courses</div>
                             {% for course in course_list %}
-                            <a class="nav-link" href="{% url 'surveys' course.name %}">
+                            <a class="nav-link" href="{% url 'surveys' course.course_id %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-solid fa-book"></i></div>
                                 {{ course.name }}
                             </a>
