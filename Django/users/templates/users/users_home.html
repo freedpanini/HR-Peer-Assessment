@@ -1,0 +1,67 @@
+{% extends "users/home.html" %}
+
+{% block course_header %}
+<!-- Course Title-->
+<div class="col">
+    <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>{{current_course_name}}</strong></h1>
+</div>  
+<!-- Logout dropdown-->
+<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'surveys' current_course %}">Surveys</a></li>
+            <li><a class="dropdown-item" href="{% url 'users' current_course %}">People</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+        </ul>
+    </li>
+</ul>
+{% endblock %}
+
+{% block core_content %}
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Course Roster</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Roster
+            </div>
+            <div class="card-body">
+                {% for team in teams %}
+                <h4 class="mt-4">{{team.team_name}}</h4>
+                {% if team.students %}
+                <table class="table" id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in team.students %}
+                        <tr>
+                            <td>{{student.first_name}} {{student.last_name}}</td>
+                            <td>{{student.email}}</td>
+                            {% if user.is_staff%}
+                            <td><a href="{% url 'swap_team' current_course student.id%}"><button class="fa-solid fa-arrow-right"></button></a></td>
+                            <td><i class="fa-solid fa-trash-can"></i></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="margin-left:5%"><b>No students registered</b></div>
+                {% endif %}
+                {% endfor %}
+                {% if user.is_staff%}
+                <a class = "nav-link" href="{% url 'create_team' current_course %}">
+                    <button class="btn btn-transparent btn-lg"><i style="color:#6c757d" class="fas fa-solid fa-plus"></i></button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

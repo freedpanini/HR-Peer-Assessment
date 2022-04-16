@@ -1,5 +1,24 @@
 {% extends "users/home.html" %}
 
+{% block course_header %}
+<!-- Course Title-->
+<div class="col">
+    <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>{{current_course_name}}</strong></h1>
+</div>  
+<!-- Logout dropdown-->
+<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'surveys' current_course %}">Surveys</a></li>
+            <li><a class="dropdown-item" href="{% url 'users' current_course %}">People</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+        </ul>
+    </li>
+</ul>
+{% endblock %}
+
 {% block core_content %}
 <div class="container-fluid px-4">
     <div class="row" style="margin-top:2%"></div>

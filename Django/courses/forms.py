@@ -9,19 +9,11 @@ class CourseForm(forms.Form):
 	emails 		= forms.CharField()
 	
 class TeamForm(forms.ModelForm):
-	STUDENT_LIST = (
-    	('Hannah', 'Hannah Brooks'),
-    	('Zach', 'Zach Crews'),
-    	('Matthew', 'Matthew Scott'),
-    	('Fred', 'Fred Pan'),
-    	('Alec', 'Alec Lobanov'),
-    	('Yufan', 'Yufan Yang')
-	)
-	student_list = forms.MultipleChoiceField(
-        choices=STUDENT_LIST, 
-        widget=forms.CheckboxSelectMultiple())
 	team_name	= forms.CharField(required=True)
 	class Meta:
 		model   = Team
-		fields	= ['team_name','student_list','team_id']
+		fields	= ['team_name','team_id']
 
+class TeamSwapForm(forms.Form):
+	student 	= forms.EmailField(max_length=120,required=True)
+	team_id 	= forms.DecimalField(max_digits=20,required=True)

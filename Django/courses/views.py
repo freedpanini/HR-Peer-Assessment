@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import Course, Team, Invitation, Registration
-from .forms import CourseForm, TeamForm
+from .forms import CourseForm, TeamForm, TeamSwapForm
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
+from django.contrib.auth.models import User
+
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
@@ -13,6 +15,7 @@ def course_creation_view(request):
 		if form.is_valid():
 			data = form.cleaned_data
 			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code'],professor=request.user.email).course_id
+			Team.objects.create(team_name="Default Team",team_num=0,course_id=course_id)
 			invite_students(request, data, course_id, data['name'])
 			return redirect('home')
 
@@ -20,18 +23,52 @@ def course_creation_view(request):
 	return render(request, "courses/course_create.html", context)
 
 
-def team_creation_view(request):
+def team_creation_view(request, course_pk):
 	form=TeamForm()
 	if request.method=="POST":
-		teamname=request.POST.get('teamname')
 		form=TeamForm(request.POST)
 		if form.is_valid():
-			Team.objects.create(**form.cleaned_data)
-			return redirect('send_email')
-			
-	context={'form':form}
+			current_num_teams = len(Team.objects.filter(course_id=course_pk))
+			Team.objects.create(team_name=request.POST['team_name'], course_id=course_pk, team_num=current_num_teams)
+			return redirect('../users')
+	registrations = Registration.objects.filter(course_id=course_pk)
+	course_emails = [r.student for r in registrations]
+	students = User.objects.filter(email__in = course_emails)
+	context = {
+				'form':form,
+				'students':students
+			}
 	return render(request, "courses/team_create.html", context)
 
+def team_swap_view(request, course_pk, student_id):
+	form = TeamSwapForm()
+	if request.method == "POST":
+		form=TeamSwapForm(request.POST)
+		if form.is_valid():
+			switch_team(request,request.POST['student'],course_pk,request.POST['team_id'])
+			return redirect('../../users')
+	registrations = Registration.objects.filter(course_id=course_pk)
+	student_emails = registrations.values_list('student')
+
+	students = User.objects.filter(email__in=student_emails)
+	teams = Team.objects.filter(course_id=course_pk)
+
+	selected_student = students.get(id=student_id)
+	for i in range(len(students)):
+		if students[i] == selected_student:
+			students[i].selected = True
+
+	selected_student_team = registrations.get(student=selected_student.email).team_id
+	for i in range(len(teams)):
+		if teams[i].team_id == selected_student_team:
+			teams[i].selected = True
+
+	context = {
+				'form':form,
+				'students':students,
+				'teams':teams
+			}
+	return render(request, "courses/team_swap.html", context)
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -82,7 +119,8 @@ def accept_invite(request):
 	student=request.user.email
 	course_id = request.POST['accept']
 	invite = Invitation.objects.get(student=student, course_id=course_id)
-	Registration.objects.create(student=invite.student,course_id=invite.course_id,team_id=0,name=invite.name)
+	default_team_id = Team.objects.get(course_id=course_id,team_num=0).team_id
+	Registration.objects.create(student=invite.student,course_id=invite.course_id,name=invite.name,team_id=default_team_id)
 	invite.delete()
 	data = {
 		"course_list": get_user_registrations(request),
@@ -101,4 +139,8 @@ def decline_invite(request):
 	}
 	return render(request, 'users/home.html', data)
 
+def switch_team(request, student, course_id, team_id):
+	reg = Registration.objects.get(student=student,course_id=course_id)
+	reg.team_id = team_id
+	reg.save()
 
