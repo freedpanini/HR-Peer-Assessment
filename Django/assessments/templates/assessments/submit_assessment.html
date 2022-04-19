@@ -60,6 +60,18 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                {{ freeformset.management_form }}
+                {% for freeresponse, form in free_forms %}
+                <div class="ui basic padded segment left aligned">
+                    <div class="ui form {% if form.errors %}error{% endif %}">
+                        <h4 class="ui header">
+                            Question {{ forloop.counter }}: {{ freeresponse.response }}
+                        </h4>
+                        {{ freeformset.as_p}}
+                    </div>
+                </div>
+                {% endfor %}
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         

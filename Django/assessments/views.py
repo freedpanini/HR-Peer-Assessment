@@ -4,8 +4,8 @@
 
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import PeerAssessment, Question, Answer, Submission
-from .forms import PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet
+from .models import FreeResponseAnswer, PeerAssessment, Question, Answer, Submission
+from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from courses.models import Course, Registration
@@ -165,28 +165,40 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
     except Submission.DoesNotExist:
         raise Http404()
 
+    freeresponses = peer_assessment.freeresponse_set.all()
     questions = peer_assessment.question_set.all()
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
+    freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
+
     if request.method == "POST":
         formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
+        freeformset = freeResponsesFormSet()
         if formset.is_valid():
             with transaction.atomic():
                 for form in formset:
-                    Answer.objects.create(
-                        option_id=form.cleaned_data["option"], submission_id=sub_pk,
-                    )
+                    Answer.objects.create(option=form.cleaned_data["option"], submission=sub_pk)
+                for form2 in freeformset:
+                    freeresponse = form2.save(commit=False)
+                    freeresponse.submission = sub_pk
+                    freeresponse.save()
+                    print("here")
 
                 sub.is_complete = True
                 sub.save()
+
             return redirect("home")
 
     else:
         formset = AnswerFormSet(form_kwargs=form_kwargs)
+        freeformset = freeResponsesFormSet()
+
     question_forms = zip(questions, formset)
+    free_forms = zip(freeresponses, freeformset)
+    print(len(freeresponses), len(freeformset))
     return render(
         request,
         "assessments/submit_assessment.html",
-        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset},
+        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset, "free_forms": free_forms, "freeformset": freeformset},
     )
