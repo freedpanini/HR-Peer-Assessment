@@ -34,3 +34,7 @@ class Invitation(models.Model):
 	student 	= models.EmailField(max_length=120,blank=False)
 	course_id 	= models.DecimalField(max_digits=20,decimal_places=0, blank=False)
 	name = models.CharField(max_length=120)
+
+
+
+	

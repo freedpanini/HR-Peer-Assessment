@@ -18,6 +18,7 @@ def create_assessment(request):
         if form.is_valid():
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
+            peer_assessment.course = request.AutoField
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:

@@ -12,6 +12,7 @@ class PeerAssessment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE,default=None)
     creation_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=get_week_ahead)
+    course = models.AutoField(primary_key=True)
 
 
 class Question(models.Model):
