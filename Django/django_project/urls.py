@@ -42,5 +42,8 @@ urlpatterns = [
     path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question'),
     path('handle_invite', handle_invite, name='handle_invite'),
     path("<int:peer_assessment_pk>/create_free_response/", assessment_views.create_free_response, name="create_free_response"),
-    path('assessments_list/', assessment_views.assessments_list, name='assessments_list')
+    path('assessments_list/', assessment_views.assessments_list, name='assessments_list'),
+    path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
+    path("<int:pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
+
 ]
