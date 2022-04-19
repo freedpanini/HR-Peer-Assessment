@@ -71,11 +71,12 @@ def team_swap_view(request, course_pk, student_id):
 			}
 	return render(request, "courses/team_swap.html", context)
 
-def shuffle_teams_view(request, course_pk):
-	print(f"Shuffling teams for course #{course_pk}")
+def shuffle_teams(request, course_pk):
 	teams = Team.objects.filter(course_id=course_pk)
 	student_registrations = Registration.objects.filter(course_id=course_pk)
 	max_students_per_team = math.ceil(len(student_registrations)/len(teams))
+	if len(teams) == 1:
+		return redirect('../users')
 	for student in student_registrations:
 		selected_team = teams[random.randint(0, len(teams)-1)].team_id
 		while len(Registration.objects.filter(team_id=selected_team)) >= max_students_per_team:
@@ -83,6 +84,11 @@ def shuffle_teams_view(request, course_pk):
 		student.team_id = selected_team
 		student.save()
 	return redirect('../users')
+
+def remove_student(request, course_pk, student_id):
+	student_email = User.objects.get(id=student_id).email
+	Registration.objects.get(course_id=course_pk,student=student_email).delete()
+	return redirect('../../users')
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -157,6 +163,3 @@ def switch_team(request, student, course_id, team_id):
 	reg = Registration.objects.get(student=student,course_id=course_id)
 	reg.team_id = team_id
 	reg.save()
-
-def shuffle_teams(request, course_pk):
-	print("Shuffling teams")

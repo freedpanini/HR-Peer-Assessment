@@ -54,7 +54,7 @@
                             <td>{{student.email}}</td>
                             {% if user.is_staff%}
                             <td><a href="{% url 'swap_team' current_course student.id%}"><button class="fa-solid fa-arrow-right"></button></a></td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
+                            <td><a href="{% url 'remove_student' current_course student.id%}"><button class="fa-solid fa-trash-can"></button></a></td>
                             {% endif %}
                         </tr>
                         {% endfor %}
