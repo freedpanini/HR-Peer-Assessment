@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users import views as user_views
-from courses.views import course_creation_view, team_creation_view, send_email, handle_invite, team_swap_view
+from courses.views import course_creation_view, team_creation_view, send_email, handle_invite, team_swap_view, shuffle_teams_view
 from assessments import views as assessment_views
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
     path('create_course/', course_creation_view, name="create_course"),
     path('<int:course_pk>/create_team/',team_creation_view, name="create_team"),
     path('<int:course_pk>/<int:student_id>/swap_team/',team_swap_view, name="swap_team"),
+    path('<int:course_pk>/shuffle_teams/', shuffle_teams_view, name="shuffle_teams"),
     path('send_email/', send_email, name="send_email"),
     path('create_assessment/', assessment_views.create_assessment, name='create_assessment'),
     path("<int:pk>/edit_assessment/", assessment_views.edit_assessment, name="edit_assessment"),

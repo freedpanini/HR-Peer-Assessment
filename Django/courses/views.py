@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
+import random, math
 
 # Create your views here.
 def course_creation_view(request):
@@ -69,6 +70,19 @@ def team_swap_view(request, course_pk, student_id):
 				'teams':teams
 			}
 	return render(request, "courses/team_swap.html", context)
+
+def shuffle_teams_view(request, course_pk):
+	print(f"Shuffling teams for course #{course_pk}")
+	teams = Team.objects.filter(course_id=course_pk)
+	student_registrations = Registration.objects.filter(course_id=course_pk)
+	max_students_per_team = math.ceil(len(student_registrations)/len(teams))
+	for student in student_registrations:
+		selected_team = teams[random.randint(0, len(teams)-1)].team_id
+		while len(Registration.objects.filter(team_id=selected_team)) >= max_students_per_team:
+			selected_team = teams[random.randint(0, len(teams)-1)].team_id
+		student.team_id = selected_team
+		student.save()
+	return redirect('../users')
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -144,3 +158,5 @@ def switch_team(request, student, course_id, team_id):
 	reg.team_id = team_id
 	reg.save()
 
+def shuffle_teams(request, course_pk):
+	print("Shuffling teams")
