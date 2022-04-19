@@ -1,5 +1,5 @@
 from django import forms
-from .models import PeerAssessment, Question, Option, FreeResponse
+from .models import FreeResponseAnswer, PeerAssessment, Question, Option, FreeResponse
 
 
 class PeerAssessmentForm(forms.ModelForm):
@@ -31,6 +31,10 @@ class AnswerForm(forms.Form):
         option_field = forms.ChoiceField(choices=choices, widget=forms.RadioSelect, required=True)
         self.fields["option"] = option_field
 
+class FreeResponseAnswerForm(forms.Form):
+    class Meta:
+        model = FreeResponseAnswer
+        fields = ["response_answer"]
 
 class BaseAnswerFormSet(forms.BaseFormSet):
     def get_form_kwargs(self, index):

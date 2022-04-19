@@ -71,25 +71,6 @@ def team_swap_view(request, course_pk, student_id):
 			}
 	return render(request, "courses/team_swap.html", context)
 
-<<<<<<< HEAD
-def add_student_view(request,course_pk):
-	# form = AddStudentForm()
-	# if request.method == "POST":
-	# 	form = AddStudentForm(request.POST)
-	# 	if form.is_valid():
-	# 		data = form.cleaned_data
-	# 		course_name=Course.objects.get(course_id=course_pk).name
-	form=CourseForm
-	course_name=Course.objects.get(course_id=course_pk).name
-	if request.method=="POST":
-		form=CourseForm(request.POST)
-		if form.is_valid():
-			data=form.cleaned_data
-			invite_students(request,data,course_pk,course_name)
-			return redirect('../users')
-	context = {'course_name':course_name}
-	return render(request, "courses/add_student.html", context)
-=======
 def shuffle_teams(request, course_pk):
 	teams = Team.objects.filter(course_id=course_pk)
 	student_registrations = Registration.objects.filter(course_id=course_pk)
@@ -108,7 +89,6 @@ def remove_student(request, course_pk, student_id):
 	student_email = User.objects.get(id=student_id).email
 	Registration.objects.get(course_id=course_pk,student=student_email).delete()
 	return redirect('../../users')
->>>>>>> fe52cd394c32703a21597302cf9c1ec8af6ce2cf
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -183,9 +163,3 @@ def switch_team(request, student, course_id, team_id):
 	reg = Registration.objects.get(student=student,course_id=course_id)
 	reg.team_id = team_id
 	reg.save()
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> fe52cd394c32703a21597302cf9c1ec8af6ce2cf
