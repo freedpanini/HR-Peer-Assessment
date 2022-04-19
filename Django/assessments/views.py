@@ -8,6 +8,11 @@ from .models import PeerAssessment, Question, Answer, Submission
 from .forms import PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from courses.models import Course, Registration, Invitation, Team
+from django.core.mail import send_mail
+from django.conf import settings
+from django.urls import reverse
+
 
 
 # Create your views here.
@@ -18,7 +23,7 @@ def create_assessment(request):
         if form.is_valid():
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
-            peer_assessment.course = request.AutoField
+            peer_assessment.course_id = 1
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:
@@ -33,6 +38,7 @@ def edit_assessment(request, pk):
             pk=pk, creator=request.user, is_active=False
         )
     except PeerAssessment.DoesNotExist:
+        print("Doesnt exist")
         raise Http404()
 
     try:
@@ -45,7 +51,21 @@ def edit_assessment(request, pk):
     if request.method == "POST":
         peer_assessment.is_active = True
         peer_assessment.save()
-        return redirect("home", pk=pk)
+        course = Course.objects.get(course_id=peer_assessment.course_id)
+        registrations = Registration.objects.filter(course_id=course.course_id)
+        student_emails = [o.student for o in registrations]
+
+        host = request.get_host()
+        public_path = reverse("assessment-start", args=[pk])
+        url = f"{request.scheme}://{host}{public_path}"
+
+        send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
+	    url,
+	    settings.EMAIL_HOST_USER,
+	    student_emails,
+	    fail_silently=False,html_message=url)
+
+        return redirect("home")
     else:
         questions = peer_assessment.question_set.all()
         frees = peer_assessment2.freeresponse_set.all()

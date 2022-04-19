@@ -76,7 +76,6 @@
         <a class="btn btn-primary" href="{% url 'create_free_response' peer_assessment.pk %}">
             Add a free response
         </a>
-        {% if questions|length > 0 %}
         <div style="margin-bottom: 20px;" class="ui divider"></div>
         <form style="display: inline-block;" method="post">
             {% csrf_token %}
@@ -86,7 +85,6 @@
         <a class="btn btn-secondary" href="{% url 'assessments_list' %}">
            Back
         </a>
-        {% endif %}
     </div>
 </div>
                         

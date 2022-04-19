@@ -71,9 +71,7 @@
                                                 <td>{{ peer_assessment.end_date }}</td>
                                                 <td>
                                                     {% if peer_assessment.is_active %}
-                                                    <!-- <a href="{% url 'assessment-detail' peer_assessment.pk %}">
-                                                        <div class="ui button">view</div>
-                                                    </a> -->
+                                                    <p>Active</p>
                                                     {% else %}
                                                     <a href="{% url  'edit_assessment' peer_assessment.pk %}">
                                                         <div class="ui button">edit</div>
