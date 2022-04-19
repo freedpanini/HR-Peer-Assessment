@@ -57,7 +57,7 @@ def edit_assessment(request, pk):
         student_emails = [o.student for o in registrations]
 
         host = request.get_host()
-        public_path = reverse("assessment-start", args=[pk])
+        public_path = reverse("start_assessment", args=[pk])
         url = f"{request.scheme}://{host}{public_path}"
 
         send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
@@ -150,7 +150,6 @@ def start_assessment(request, peer_assessment_pk):
 
 @login_required
 def submit_assessment(request, peer_assessment_pk, sub_pk):
-    """Survey-taker submit their completed survey."""
     try:
         peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
             pk=peer_assessment_pk, is_active=True
@@ -185,6 +184,6 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
     question_forms = zip(questions, formset)
     return render(
         request,
-        "survey/submit.html",
-        {"survey": peer_assessment, "question_forms": question_forms, "formset": formset},
+        "assessments/submit_assessment.html",
+        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset},
     )

@@ -26,7 +26,7 @@ class OptionForm(forms.ModelForm):
 class AnswerForm(forms.Form):
     def __init__(self, *args, **kwargs):
         options = kwargs.pop("options")
-        choices = {(o.pk, o.text) for o in options}
+        choices = {(o.pk, o.option_text) for o in options}
         super().__init__(*args, **kwargs)
         option_field = forms.ChoiceField(choices=choices, widget=forms.RadioSelect, required=True)
         self.fields["option"] = option_field
