@@ -14,6 +14,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.forms.formsets import formset_factory
 from django.db import transaction
+import datetime
 
 
 # Create your views here.
@@ -142,6 +143,8 @@ def assessments_list(request):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
+    if peer_assessment.get_object(end_date) > datetime.datetime.now():
+        return redirect('home')
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
         return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
