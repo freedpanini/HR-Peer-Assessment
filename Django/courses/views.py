@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Course, Team, Invitation, Registration
-from .forms import CourseForm, TeamForm, TeamSwapForm
+from .forms import CourseForm, TeamForm, TeamSwapForm, AddStudentForm
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -69,6 +69,24 @@ def team_swap_view(request, course_pk, student_id):
 				'teams':teams
 			}
 	return render(request, "courses/team_swap.html", context)
+
+def add_student_view(request,course_pk):
+	# form = AddStudentForm()
+	# if request.method == "POST":
+	# 	form = AddStudentForm(request.POST)
+	# 	if form.is_valid():
+	# 		data = form.cleaned_data
+	# 		course_name=Course.objects.get(course_id=course_pk).name
+	form=CourseForm
+	course_name=Course.objects.get(course_id=course_pk).name
+	if request.method=="POST":
+		form=CourseForm(request.POST)
+		if form.is_valid():
+			data=form.cleaned_data
+			invite_students(request,data,course_pk,course_name)
+			return redirect('../users')
+	context = {'course_name':course_name}
+	return render(request, "courses/add_student.html", context)
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -143,4 +161,6 @@ def switch_team(request, student, course_id, team_id):
 	reg = Registration.objects.get(student=student,course_id=course_id)
 	reg.team_id = team_id
 	reg.save()
+
+
 

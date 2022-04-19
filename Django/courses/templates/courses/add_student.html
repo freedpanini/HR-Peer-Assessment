@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Team Creation</title>
+    <title>Add Student</title>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 </head>
@@ -19,17 +19,16 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Team</h3></div>
+                            {% csrf_token %}
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4"> Add Student to {{course_name}} </h3></div>
                             <div class="card-body">
                                 <form action = '.' method='POST'>
-                                    {% csrf_token %}
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" name="team_name" id="inputTeamName" type="text" placeholder="Team X" />
-                                        <label for="inputTeamName">Team Name</label>
+                                        <input name="emails" class="form-control" id="inputEmails" type="text" placeholder="crewsz@bc.edu" />
+                                        <label for="inputEmails">Student Emails (separated by commas)</label>
                                     </div>
-
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Create Team' class="btn btn-primary btn-block"/></a></div>
+                                        <div class="d-grid"><a class="btn btn-primary btn-block" href='../../users'><input type='submit' value='Add to Course' class="btn btn-primary"></a></div>
                                     </div>
                                 </form>
                             </div>
