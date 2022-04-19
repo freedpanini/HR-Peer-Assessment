@@ -140,11 +140,11 @@ def assessments_list(request):
     return render(request, "assessments/assessments_list.html", {"peer_assessments": peer_assessments})
 
 @login_required
-def start_assessment(request, pk):
-    peer_assessment = get_object_or_404(PeerAssessment, pk=pk, is_active=True)
+def start_assessment(request, peer_assessment_pk):
+    peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
-        return redirect("submit_assessment", peer_assessment_pk=pk, sub_pk=sub.pk)
+        return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
 
     return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
 
