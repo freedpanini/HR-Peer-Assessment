@@ -5,14 +5,15 @@
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import PeerAssessment, Question, Answer, Submission
-from .forms import PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm
+from .forms import PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from courses.models import Course, Registration, Invitation, Team
+from courses.models import Course, Registration
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
-
+from django.forms.formsets import formset_factory
+from django.db import transaction
 
 
 # Create your views here.
@@ -56,7 +57,7 @@ def edit_assessment(request, pk):
         student_emails = [o.student for o in registrations]
 
         host = request.get_host()
-        public_path = reverse("assessment-start", args=[pk])
+        public_path = reverse("start_assessment", args=[pk])
         url = f"{request.scheme}://{host}{public_path}"
 
         send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
@@ -138,3 +139,51 @@ def assessments_list(request):
     peer_assessments = PeerAssessment.objects.filter(creator=request.user).order_by("-creation_date").all()
     return render(request, "assessments/assessments_list.html", {"peer_assessments": peer_assessments})
 
+@login_required
+def start_assessment(request, peer_assessment_pk):
+    peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
+    if request.method == "POST":
+        sub = Submission.objects.create(peer_assessment=peer_assessment)
+        return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
+
+    return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
+
+@login_required
+def submit_assessment(request, peer_assessment_pk, sub_pk):
+    try:
+        peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
+            pk=peer_assessment_pk, is_active=True
+        )
+    except PeerAssessment.DoesNotExist:
+        raise Http404()
+
+    try:
+        sub = peer_assessment.submission_set.get(pk=sub_pk, is_complete=False)
+    except Submission.DoesNotExist:
+        raise Http404()
+
+    questions = peer_assessment.question_set.all()
+    options = [q.option_set.all() for q in questions]
+    form_kwargs = {"empty_permitted": False, "options": options}
+    AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
+    if request.method == "POST":
+        formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
+        if formset.is_valid():
+            with transaction.atomic():
+                for form in formset:
+                    Answer.objects.create(
+                        option_id=form.cleaned_data["option"], submission_id=sub_pk,
+                    )
+
+                sub.is_complete = True
+                sub.save()
+            return redirect("home")
+
+    else:
+        formset = AnswerFormSet(form_kwargs=form_kwargs)
+    question_forms = zip(questions, formset)
+    return render(
+        request,
+        "assessments/submit_assessment.html",
+        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset},
+    )

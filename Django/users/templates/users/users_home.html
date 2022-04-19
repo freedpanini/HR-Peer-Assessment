@@ -33,6 +33,14 @@
         </a>
     </div>
             <div class="card-body">
+                {% if user.is_staff%}
+                <div class="row mb-4 md-4">
+                        <form method="POST" action="{% url 'shuffle_teams' current_course %}">
+                            {% csrf_token %}
+                            <button class="btn btn-primary btn-block" type="submit" name="shuffle">Shuffle Teams</button>
+                        </form>
+                </div>
+                {% endif %}
                 {% for team in teams %}
                 <h4 class="mt-4">{{team.team_name}}</h4>
                 {% if team.students %}
@@ -51,7 +59,7 @@
                             <td>{{student.email}}</td>
                             {% if user.is_staff%}
                             <td><a href="{% url 'swap_team' current_course student.id%}"><button class="fa-solid fa-arrow-right"></button></a></td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
+                            <td><a href="{% url 'remove_student' current_course student.id%}"><button class="fa-solid fa-trash-can"></button></a></td>
                             {% endif %}
                         </tr>
                         {% endfor %}
