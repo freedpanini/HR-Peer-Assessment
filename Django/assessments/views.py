@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.forms.formsets import formset_factory
 from django.db import transaction
 from datetime import datetime
-
+from django.utils import timezone
 
 # Create your views here.
 @login_required
@@ -143,7 +143,7 @@ def assessments_list(request,course_pk):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-    if peer_assessment.end_date > datetime.today():
+    if peer_assessment.end_date > timezone.now():
         peer_assessment.is_active = False
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
