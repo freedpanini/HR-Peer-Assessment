@@ -1,6 +1,7 @@
 from django import forms
-from .models import FreeResponseAnswer, PeerAssessment, Question, Option, FreeResponse
-
+from django.contrib.auth.models import User
+from .models import FreeResponseAnswer, PeerAssessment, Question, Option, FreeResponse, Submission
+from django.forms import HiddenInput
 
 class PeerAssessmentForm(forms.ModelForm):
     class Meta:
@@ -42,6 +43,8 @@ class BaseAnswerFormSet(forms.BaseFormSet):
         kwargs["options"] = kwargs["options"][index]
         return kwargs
 
-
-
-
+class SubmissionForm(forms.ModelForm):
+    assigned_to = forms.ModelChoiceField(queryset=User.objects.all())
+    class Meta:
+        model = Submission
+        fields = ['assigned_to']
