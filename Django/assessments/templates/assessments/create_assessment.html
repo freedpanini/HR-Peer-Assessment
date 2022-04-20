@@ -55,8 +55,8 @@
                 {{ field }}
             </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">Create</button>
-            <a class="btn btn-secondary" href = "{% url 'assessments_list' pk %}">
+            <button type="submit" class="btn btn-primary" value = 'Course_id'>Create</button>
+            <a class="btn btn-secondary" href = "{% url 'assessments_list' value %}">
                 Cancel
             </a>
            
