@@ -16,10 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users import views as user_views
-<<<<<<< HEAD
 from courses.views import course_creation_view, team_creation_view, send_email, handle_invite, team_swap_view, add_student_view
-=======
->>>>>>> 3c18748bcdb52debac12d28bad388b1815c4d27f
 from courses.views import course_creation_view, team_creation_view, send_email, handle_invite, team_swap_view, shuffle_teams, remove_student
 from assessments import views as assessment_views
 
@@ -47,14 +44,10 @@ urlpatterns = [
     path('handle_invite', handle_invite, name='handle_invite'),
     path("<int:peer_assessment_pk>/create_free_response/", assessment_views.create_free_response, name="create_free_response"),
     path('assessments_list/', assessment_views.assessments_list, name='assessments_list'),
-<<<<<<< HEAD
-
     path('<int:course_pk>/add_student', add_student_view,name='add_student'),
     path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
-    path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
-
-=======
+    path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment"),
     path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
     path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
->>>>>>> 3c18748bcdb52debac12d28bad388b1815c4d27f
+
 ]

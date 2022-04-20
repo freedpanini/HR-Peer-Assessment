@@ -26,6 +26,8 @@ def create_assessment(request):
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
             peer_assessment.course_id = 1
+            peer_assessment.creation_date = datetime.datetime.now()
+            peer_assessment.end_date = (datetime.datetime.now() + 1)
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:
@@ -143,7 +145,7 @@ def assessments_list(request):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-    if peer_assessment.get_object(end_date) > datetime.datetime.now():
+    if peer_assessment.get(end_date) > datetime.datetime.now():
         return redirect('home')
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
