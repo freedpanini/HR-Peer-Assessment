@@ -59,7 +59,7 @@
                                         <div style="margin-bottom: 30px;">
                                             <button type="submit" class="btn btn-primary">Create Free Response Question</button>
                                         </div>
-                                        <a href = "{% url 'edit_assessment' peer_assessment.pk %}">
+                                        <a href = "{% url 'edit_assessment' peer_assessment.pk course_pk%}">
                                             <div class="btn btn-secondary">Cancel</div>
                                         </a>
                                     </form>
