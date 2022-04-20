@@ -60,6 +60,7 @@
                                                 <th>Title</th>
                                                 <th>Created At</th>
                                                 <th>Due Date</th>
+                                                <th>Course ID</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -69,6 +70,7 @@
                                                 <td>{{ peer_assessment.title }}</td>
                                                 <td>{{ peer_assessment.creation_date }}</td>
                                                 <td>{{ peer_assessment.end_date }}</td>
+                                                <td>{{ peer_assessment.course_id }}</td>
                                                 <td>
                                                     {% if peer_assessment.is_active %}
                                                     <p>Active</p>
