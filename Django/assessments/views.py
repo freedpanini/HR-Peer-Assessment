@@ -1,3 +1,4 @@
+
 #<<<<<<< HEAD
 
 # Create your views here.
@@ -5,7 +6,7 @@
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import FreeResponseAnswer, PeerAssessment, Question, Answer, Submission
-from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet
+from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet, SubmissionForm
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from courses.models import Course, Registration
@@ -64,10 +65,10 @@ def edit_assessment(request, pk, course_pk):
         url = f"{request.scheme}://{host}{public_path}"
 
         send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
-	    url,
-	    settings.EMAIL_HOST_USER,
-	    student_emails,
-	    fail_silently=False,html_message=url)
+        url,
+        settings.EMAIL_HOST_USER,
+        student_emails,
+        fail_silently=False,html_message=url)
 
         return redirect("home")
     else:
@@ -150,11 +151,18 @@ def start_assessment(request, peer_assessment_pk):
         print("after end date")
         return redirect("home")
     if request.method == "POST":
-        sub = Submission.objects.create(peer_assessment=peer_assessment)
-        return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
+        form = SubmissionForm(request.POST)
+        if form.is_valid():
+            sub = form.save(commit=False)
+            sub.peer_assessment = peer_assessment
+            sub.save()
+            print("valid form saved")
+            return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
+    else: 
+        form = SubmissionForm()
 
-    return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
-
+    return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment, "form": form})
+    
 @login_required
 def submit_assessment(request, peer_assessment_pk, sub_pk):
     try:
@@ -209,3 +217,4 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
         "assessments/submit_assessment.html",
         {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset, "free_forms": free_forms, "freeformset": freeformset},
     )
+
