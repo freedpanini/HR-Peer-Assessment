@@ -51,6 +51,7 @@
                                     </h1>
                                     <form method="post" action="" style="display: inline-block;">
                                         {% csrf_token %}
+                                        {{form.as_p}}
                                         <button type="submit" class="btn  btn-primary">Start Peer Assessment
                                     </form>
                                 </div>
