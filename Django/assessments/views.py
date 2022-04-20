@@ -57,6 +57,8 @@ def edit_assessment(request, pk, course_pk):
         registrations = Registration.objects.filter(course_id=course.course_id)
         student_emails = [o.student for o in registrations]
 
+        print(student_emails)
+
         host = request.get_host()
         public_path = reverse("start_assessment", args=[pk])
         url = f"{request.scheme}://{host}{public_path}"
@@ -143,8 +145,10 @@ def assessments_list(request,course_pk):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-    if peer_assessment.end_date > timezone.now():
+    if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
+        print("after end date")
+        return redirect("home")
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
         return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
