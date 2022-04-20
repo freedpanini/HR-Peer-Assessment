@@ -26,8 +26,6 @@ def create_assessment(request):
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
             peer_assessment.course_id = 1
-            peer_assessment.creation_date = datetime.datetime.now()
-            peer_assessment.end_date = (datetime.datetime.now() + 1)
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:

@@ -5,7 +5,7 @@ from .models import FreeResponseAnswer, PeerAssessment, Question, Option, FreeRe
 class PeerAssessmentForm(forms.ModelForm):
     class Meta:
         model = PeerAssessment
-        fields = ["title"]
+        fields = ["title", "creation_date", "end_date"]
 
 
 class QuestionForm(forms.ModelForm):
@@ -41,3 +41,7 @@ class BaseAnswerFormSet(forms.BaseFormSet):
         kwargs = super().get_form_kwargs(index)
         kwargs["options"] = kwargs["options"][index]
         return kwargs
+
+
+
+
