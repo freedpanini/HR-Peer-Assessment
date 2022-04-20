@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
-
+import math, random
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
@@ -81,10 +81,10 @@ def add_student_view(request,course_pk):
 	# 	if form.is_valid():
 	# 		data = form.cleaned_data
 	# 		course_name=Course.objects.get(course_id=course_pk).name
-	form=CourseForm
+	form=AddStudentForm()
 	course_name=Course.objects.get(course_id=course_pk).name
 	if request.method=="POST":
-		form=CourseForm(request.POST)
+		form=AddStudentForm(request.POST)
 		if form.is_valid():
 			data=form.cleaned_data
 			invite_students(request,data,course_pk,course_name)
