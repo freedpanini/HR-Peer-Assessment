@@ -14,7 +14,6 @@ from django.conf import settings
 from django.urls import reverse
 from django.forms.formsets import formset_factory
 from django.db import transaction
-import datetime
 
 
 # Create your views here.
@@ -26,8 +25,6 @@ def create_assessment(request):
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
             peer_assessment.course_id = 1
-            peer_assessment.creation_date = datetime.datetime.now()
-            peer_assessment.end_date = (datetime.datetime.now() + 1)
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:
@@ -145,8 +142,6 @@ def assessments_list(request):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-    if peer_assessment.get(end_date) > datetime.datetime.now():
-        return redirect('home')
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
         return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
@@ -171,6 +166,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
     questions = peer_assessment.question_set.all()
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
+
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
     freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
 
@@ -180,10 +176,10 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
         if formset.is_valid():
             with transaction.atomic():
                 for form in formset:
-                    Answer.objects.create(option=form.cleaned_data["option"], submission=sub_pk)
+                    Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
                 for form2 in freeformset:
                     freeresponse = form2.save(commit=False)
-                    freeresponse.submission = sub_pk
+                    freeresponse.submission = sub
                     freeresponse.save()
                     print("here")
 
@@ -191,6 +187,8 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
                 sub.save()
 
             return redirect("home")
+        else:
+            print("notvalid")
 
     else:
         formset = AnswerFormSet(form_kwargs=form_kwargs)

@@ -31,7 +31,7 @@ class AnswerForm(forms.Form):
         option_field = forms.ChoiceField(choices=choices, widget=forms.RadioSelect, required=True)
         self.fields["option"] = option_field
 
-class FreeResponseAnswerForm(forms.Form):
+class FreeResponseAnswerForm(forms.ModelForm):
     class Meta:
         model = FreeResponseAnswer
         fields = ["response_answer"]
