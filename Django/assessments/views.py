@@ -145,16 +145,13 @@ def assessments_list(request,course_pk):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-<<<<<<< HEAD
     if peer_assessment.get(end_date) < datetime.today():
         peer_assessment.is_active = False
         return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
-=======
     if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
         print("after end date")
         return redirect("home")
->>>>>>> 51b6d60f567b0caa3a49db061455463631249ca2
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
         return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
