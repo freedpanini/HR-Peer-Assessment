@@ -25,6 +25,7 @@ def home_view(request):
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request)
     }
+    print(get_user_registrations(request))
     return render(request, 'users/home.html', data)
 
 def surveys_home_view(request, course_pk):

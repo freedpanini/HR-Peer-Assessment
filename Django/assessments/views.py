@@ -6,6 +6,7 @@
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import FreeResponseAnswer, PeerAssessment, Question, Answer, Submission
+from courses.models import Course, Registration, Invitation, Team
 from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet, SubmissionForm
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
@@ -141,7 +142,15 @@ def create_free_response(request, peer_assessment_pk,course_pk):
 @login_required
 def assessments_list(request,course_pk):
     peer_assessments = PeerAssessment.objects.filter(creator=request.user).order_by("-creation_date").all()
-    return render(request, "assessments/assessments_list.html", {"peer_assessments": peer_assessments, "course_pk": course_pk})
+    curr = Course.objects.get(course_id=course_pk)
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "peer_assessments": peer_assessments,
+        "current_course_name": curr.name,
+        "course_pk": course_pk
+    }
+    return render(request, "assessments/assessments_list.html", data)
 
 @login_required
 def start_assessment(request, peer_assessment_pk):
@@ -218,3 +227,15 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
         {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset, "free_forms": free_forms, "freeformset": freeformset},
     )
 
+def get_user_registrations(request):
+    if request.user.is_staff:
+        registrations = Course.objects.filter(professor=request.user.email)
+    else:
+        registrations = Registration.objects.filter(student=request.user.email)
+    return registrations
+
+def get_user_invitations(request):
+    invitations = []
+    if not request.user.is_staff:
+        invitations = Invitation.objects.filter(student=request.user.email)
+    return invitations

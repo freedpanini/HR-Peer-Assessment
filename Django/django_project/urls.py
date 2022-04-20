@@ -27,7 +27,7 @@ urlpatterns = [
     path('logout/', user_views.logout_view, name='login'),
     path('admin/', admin.site.urls),
     path('login/', user_views.login_view, name='login'),
-    path('register/', user_views.register_view, name='register'),
+    path('registe/', user_views.register_view, name='register'),
     path('peer_assessment/', user_views.assessment_view, name = 'peer_assessment'),
     path('assessment_summary/', user_views.summary_view, name = 'assessment_summary'),
     path('create_course/', course_creation_view, name="create_course"),
