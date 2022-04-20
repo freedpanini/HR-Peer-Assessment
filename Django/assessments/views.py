@@ -16,6 +16,7 @@ from django.forms.formsets import formset_factory
 from django.db import transaction
 
 
+
 # Create your views here.
 @login_required
 def create_assessment(request):
@@ -24,7 +25,7 @@ def create_assessment(request):
         if form.is_valid():
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
-            peer_assessment.course_id = 1
+            peer_assessment.course_id = Course.course_id
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:
@@ -66,7 +67,7 @@ def edit_assessment(request, pk):
 	    student_emails,
 	    fail_silently=False,html_message=url)
 
-        return redirect("home")
+        return redirect("assessments_list", pk=registration)
     else:
         questions = peer_assessment.question_set.all()
         frees = peer_assessment2.freeresponse_set.all()
@@ -142,6 +143,8 @@ def assessments_list(request):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
+    if peer_assessment.get(end_date) > datetime.today():
+        peer_assessment.is_active = False
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
         return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
