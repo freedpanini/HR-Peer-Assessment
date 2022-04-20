@@ -6,7 +6,6 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
-import random, math
 
 # Create your views here.
 def course_creation_view(request):
@@ -71,7 +70,6 @@ def team_swap_view(request, course_pk, student_id):
 			}
 	return render(request, "courses/team_swap.html", context)
 
-<<<<<<< HEAD
 def add_student_view(request,course_pk):
 	# form = AddStudentForm()
 	# if request.method == "POST":
@@ -89,26 +87,6 @@ def add_student_view(request,course_pk):
 			return redirect('../users')
 	context = {'course_name':course_name}
 	return render(request, "courses/add_student.html", context)
-=======
-def shuffle_teams(request, course_pk):
-	teams = Team.objects.filter(course_id=course_pk)
-	student_registrations = Registration.objects.filter(course_id=course_pk)
-	max_students_per_team = math.ceil(len(student_registrations)/len(teams))
-	if len(teams) == 1:
-		return redirect('../users')
-	for student in student_registrations:
-		selected_team = teams[random.randint(0, len(teams)-1)].team_id
-		while len(Registration.objects.filter(team_id=selected_team)) >= max_students_per_team:
-			selected_team = teams[random.randint(0, len(teams)-1)].team_id
-		student.team_id = selected_team
-		student.save()
-	return redirect('../users')
-
-def remove_student(request, course_pk, student_id):
-	student_email = User.objects.get(id=student_id).email
-	Registration.objects.get(course_id=course_pk,student=student_email).delete()
-	return redirect('../../users')
->>>>>>> fe52cd394c32703a21597302cf9c1ec8af6ce2cf
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -183,9 +161,6 @@ def switch_team(request, student, course_id, team_id):
 	reg = Registration.objects.get(student=student,course_id=course_id)
 	reg.team_id = team_id
 	reg.save()
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> fe52cd394c32703a21597302cf9c1ec8af6ce2cf
