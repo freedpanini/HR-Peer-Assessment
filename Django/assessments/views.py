@@ -19,13 +19,13 @@ from django.db import transaction
 
 # Create your views here.
 @login_required
-def create_assessment(request):
+def create_assessment(request, course_pk):
     if request.method == "POST":
         form = PeerAssessmentForm(request.POST)
         if form.is_valid():
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
-            peer_assessment.course_id = Course.course_id
+            peer_assessment.course_id = course_pk
             peer_assessment.save()
             return redirect("edit_assessment", pk=peer_assessment.id)
     else:
@@ -67,7 +67,7 @@ def edit_assessment(request, pk):
 	    student_emails,
 	    fail_silently=False,html_message=url)
 
-        return redirect("assessments_list", pk=registration)
+        return redirect("assessments_list")
     else:
         questions = peer_assessment.question_set.all()
         frees = peer_assessment2.freeresponse_set.all()
