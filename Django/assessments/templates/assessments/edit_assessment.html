@@ -45,7 +45,7 @@
                 <main>
                     <div class="container-fluid px-4">
                         <div class="ui center aligned basic very padded segment">
-    <h1 class="ui header">Editing Peer Assessment</h1>
+    <h1 class="ui header">Editing Peer Assessment: {{peer_assessment.title}}</h1>
     <div class="ui container left aligned">
         {% for question in questions %}
         <div class="ui basic padded segment">
@@ -70,10 +70,10 @@
         </div>
         {% endfor %}
 
-        <a class="btn btn-primary" href="{% url 'create_question' peer_assessment.pk %}">
+        <a class="btn btn-primary" href="{% url 'create_question' peer_assessment.pk course_pk%}">
             Add a question
         </a>
-        <a class="btn btn-primary" href="{% url 'create_free_response' peer_assessment.pk %}">
+        <a class="btn btn-primary" href="{% url 'create_free_response' peer_assessment.pk course_pk%}">
             Add a free response
         </a>
         <div style="margin-bottom: 20px;" class="ui divider"></div>
@@ -82,7 +82,7 @@
             <button type="submit" class="btn btn-success">Activate Peer Assessment</button>
         </form>
         <div style="margin-bottom: 20px;" class="ui divider"></div>
-        <a class="btn btn-secondary" href="{% url 'assessments_list' %}">
+        <a class="btn btn-secondary" href="{% url 'assessments_list' course_pk %}">
            Back
         </a>
     </div>

@@ -60,6 +60,7 @@
                                                 <th>Title</th>
                                                 <th>Created At</th>
                                                 <th>Due Date</th>
+                                                <th>Course ID</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -69,11 +70,12 @@
                                                 <td>{{ peer_assessment.title }}</td>
                                                 <td>{{ peer_assessment.creation_date }}</td>
                                                 <td>{{ peer_assessment.end_date }}</td>
+                                                <td>{{ peer_assessment.course_id }}</td>
                                                 <td>
                                                     {% if peer_assessment.is_active %}
                                                     <p>Active</p>
                                                     {% else %}
-                                                    <a href="{% url  'edit_assessment' peer_assessment.pk %}">
+                                                    <a href="{% url  'edit_assessment' peer_assessment.pk course_pk%}">
                                                         <div class="ui button">edit</div>
                                                     </a>
                                                     {% endif %}
@@ -87,11 +89,11 @@
                                 
                                 
                                 {% else %}
-                                <h2 class="ui header">Your Peer Assessments
+                                <h2 class="ui header">
                                     <div class="sub header">You don't have any peer assessments yet, try creating one first!</div>
                                 </h2>
                                 {% endif %}
-                                <a href="{% url 'create_assessment' %}">
+                                <a href="{% url 'create_assessment' course_pk%}">
                                     <div class="ui primary button">Create a new survey</div>
                                 </a>
                             

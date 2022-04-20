@@ -16,11 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users import views as user_views
-<<<<<<< HEAD
 from courses.views import course_creation_view, team_creation_view, send_email, handle_invite, team_swap_view, add_student_view
-=======
 from courses.views import course_creation_view, team_creation_view, send_email, handle_invite, team_swap_view, shuffle_teams, remove_student
->>>>>>> fe52cd394c32703a21597302cf9c1ec8af6ce2cf
 from assessments import views as assessment_views
 
 urlpatterns = [
@@ -39,19 +36,18 @@ urlpatterns = [
     path('<int:course_pk>/<int:student_id>/remove_student/',remove_student, name="remove_student"),
     path('<int:course_pk>/shuffle_teams/', shuffle_teams, name="shuffle_teams"),
     path('send_email/', send_email, name="send_email"),
-    path('create_assessment/', assessment_views.create_assessment, name='create_assessment'),
-    path("<int:pk>/edit_assessment/", assessment_views.edit_assessment, name="edit_assessment"),
-    path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question'),
-    path("<int:peer_assessment_pk>/<int:question_pk>/create_options/", assessment_views.create_options, name="create_options"),
-    path('<int:pk>/create_question/', assessment_views.create_question, name = 'create_question'),
+    path('<int:course_pk>/create_assessment/', assessment_views.create_assessment, name='create_assessment'),
+    path("<int:pk>/<int:course_pk>/edit_assessment/", assessment_views.edit_assessment, name="edit_assessment"),
+    path('<int:pk>/<int:course_pk>/create_question/', assessment_views.create_question, name = 'create_question'),
+    path("<int:peer_assessment_pk>/<int:question_pk>/<int:course_pk>/create_options/", assessment_views.create_options, name="create_options"),
+    path('<int:pk>/<int:course_pk>/create_question/', assessment_views.create_question, name = 'create_question'),
     path('handle_invite', handle_invite, name='handle_invite'),
-    path("<int:peer_assessment_pk>/create_free_response/", assessment_views.create_free_response, name="create_free_response"),
-    path('assessments_list/', assessment_views.assessments_list, name='assessments_list'),
-<<<<<<< HEAD
-    path('<int:course_pk>/add_student', add_student_view,name='add_student')
-=======
+    path("<int:peer_assessment_pk>/<int:course_pk>/create_free_response/", assessment_views.create_free_response, name="create_free_response"),
+    path('<int:course_pk>/assessments_list/', assessment_views.assessments_list, name='assessments_list'),
+    path('<int:course_pk>/add_student', add_student_view,name='add_student'),
+    path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
+    path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment"),
     path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
     path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
 
->>>>>>> fe52cd394c32703a21597302cf9c1ec8af6ce2cf
 ]

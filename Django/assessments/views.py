@@ -4,8 +4,8 @@
 
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import PeerAssessment, Question, Answer, Submission
-from .forms import PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet
+from .models import FreeResponseAnswer, PeerAssessment, Question, Answer, Submission
+from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from courses.models import Course, Registration
@@ -14,26 +14,27 @@ from django.conf import settings
 from django.urls import reverse
 from django.forms.formsets import formset_factory
 from django.db import transaction
-
+from datetime import datetime
+from django.utils import timezone
 
 # Create your views here.
 @login_required
-def create_assessment(request):
+def create_assessment(request, course_pk):
     if request.method == "POST":
         form = PeerAssessmentForm(request.POST)
         if form.is_valid():
             peer_assessment = form.save(commit=False)
             peer_assessment.creator = request.user
-            peer_assessment.course_id = 1
+            peer_assessment.course_id = course_pk
             peer_assessment.save()
-            return redirect("edit_assessment", pk=peer_assessment.id)
+            return redirect("edit_assessment", pk=peer_assessment.id, course_pk = course_pk)
     else:
         form = PeerAssessmentForm()
 
-    return render(request, "assessments/create_assessment.html", {"form": form})
+    return render(request, "assessments/create_assessment.html", {"form": form, "course_pk": course_pk})
 
 @login_required
-def edit_assessment(request, pk):
+def edit_assessment(request, pk, course_pk):
     try:
         peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
             pk=pk, creator=request.user, is_active=False
@@ -56,6 +57,8 @@ def edit_assessment(request, pk):
         registrations = Registration.objects.filter(course_id=course.course_id)
         student_emails = [o.student for o in registrations]
 
+        print(student_emails)
+
         host = request.get_host()
         public_path = reverse("start_assessment", args=[pk])
         url = f"{request.scheme}://{host}{public_path}"
@@ -70,7 +73,7 @@ def edit_assessment(request, pk):
     else:
         questions = peer_assessment.question_set.all()
         frees = peer_assessment2.freeresponse_set.all()
-        return render(request, "assessments/edit_assessment.html", {"peer_assessment": peer_assessment, "questions": questions, "frees":frees})
+        return render(request, "assessments/edit_assessment.html", {"peer_assessment": peer_assessment, "questions": questions, "frees":frees, "course_pk": course_pk})
 
 @login_required
 def delete_assessment(request, pk):
@@ -81,7 +84,7 @@ def delete_assessment(request, pk):
     return redirect("")
 
 @login_required
-def create_question(request, pk):
+def create_question(request, pk, course_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=pk)#, creator=request.user)
     if request.method == "POST":
         form = QuestionForm(request.POST)
@@ -89,14 +92,14 @@ def create_question(request, pk):
             question = form.save(commit=False)
             question.peer_assessment = peer_assessment
             question.save()
-            return redirect("create_options", peer_assessment_pk=pk, question_pk=question.pk)
+            return redirect("create_options", peer_assessment_pk=pk, question_pk=question.pk,course_pk = course_pk)
     else:
         form = QuestionForm()
 
-    return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form})
+    return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form, "course_pk": course_pk})
 
 @login_required
-def create_options(request, peer_assessment_pk, question_pk):
+def create_options(request, peer_assessment_pk, question_pk,course_pk):
 
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
     question = Question.objects.get(pk=question_pk)
@@ -111,12 +114,12 @@ def create_options(request, peer_assessment_pk, question_pk):
 
     options = question.option_set.all()
     return render(request, "assessments/create_options.html", {
-        "peer_assessment": peer_assessment, "question": question, "options": options, "form": form
+        "peer_assessment": peer_assessment, "question": question, "options": options, "form": form, "course_pk":course_pk
         },
     )
 
 @login_required
-def create_free_response(request, peer_assessment_pk):
+def create_free_response(request, peer_assessment_pk,course_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, creator=request.user)
     if request.method == 'POST':
         form = FreeResponseForm(request.POST)
@@ -125,23 +128,27 @@ def create_free_response(request, peer_assessment_pk):
             question.peer_assessment = peer_assessment
             question.save()
             print("valid form saved")
-            return redirect("edit_assessment", pk=peer_assessment.pk)
+            return redirect("edit_assessment", pk=peer_assessment.pk, course_pk = course_pk)
 
     else: 
         form = FreeResponseForm()
         print("INVALID")
     return render(request, "assessments/create_free_response.html", {
-        "peer_assessment": peer_assessment,  "form": form } #, "question": question, "options": response, "form": form},
+        "peer_assessment": peer_assessment,  "form": form ,"course_pk": course_pk} #, "question": question, "options": response, "form": form},
     )        
 
 @login_required
-def assessments_list(request):
+def assessments_list(request,course_pk):
     peer_assessments = PeerAssessment.objects.filter(creator=request.user).order_by("-creation_date").all()
-    return render(request, "assessments/assessments_list.html", {"peer_assessments": peer_assessments})
+    return render(request, "assessments/assessments_list.html", {"peer_assessments": peer_assessments, "course_pk": course_pk})
 
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
+    if peer_assessment.end_date < timezone.now():
+        peer_assessment.is_active = False
+        print("after end date")
+        return redirect("home")
     if request.method == "POST":
         sub = Submission.objects.create(peer_assessment=peer_assessment)
         return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
@@ -162,28 +169,43 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
     except Submission.DoesNotExist:
         raise Http404()
 
+    freeresponses = peer_assessment.freeresponse_set.all()
     questions = peer_assessment.question_set.all()
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
+
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
+    freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
+
     if request.method == "POST":
         formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
+        freeformset = freeResponsesFormSet()
         if formset.is_valid():
             with transaction.atomic():
                 for form in formset:
-                    Answer.objects.create(
-                        option_id=form.cleaned_data["option"], submission_id=sub_pk,
-                    )
+                    Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
+                for form2 in freeformset:
+                    freeresponse = form2.save(commit=False)
+                    freeresponse.submission = sub
+                    freeresponse.save()
+                    print("here")
 
                 sub.is_complete = True
                 sub.save()
+
             return redirect("home")
+        else:
+            print("notvalid")
 
     else:
         formset = AnswerFormSet(form_kwargs=form_kwargs)
+        freeformset = freeResponsesFormSet()
+
     question_forms = zip(questions, formset)
+    free_forms = zip(freeresponses, freeformset)
+    print(len(freeresponses), len(freeformset))
     return render(
         request,
         "assessments/submit_assessment.html",
-        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset},
+        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset, "free_forms": free_forms, "freeformset": freeformset},
     )
