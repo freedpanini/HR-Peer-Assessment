@@ -41,13 +41,13 @@
             </ul>
         </nav>
     
-        <div class="ui center aligned basic very padded segment">
-            <h1 class="ui header dividing">Your answers to {{ survey.title }}</h1>
+        <div style = "margin-left: 300px; margin-top: 50px;" class="ui center aligned basic very padded segment">
+            <h1 class="ui header dividing">Peer Assessment: {{ peer_assessment.title }}</h1>
             <form method="post" novalidate>
                 {% csrf_token %}
                 {{ formset.management_form }}
                 {% for question, form in question_forms %}
-                <div class="ui basic padded segment left aligned">
+                <div style="margin-top: 10px;" class="ui basic padded segment left aligned">
                     <div class="ui form {% if form.errors %}error{% endif %}">
                         <h4 class="ui header">
                             Question {{ forloop.counter }}: {{ question.prompt }}
@@ -63,7 +63,7 @@
 
                 {{ freeformset.management_form }}
                 {% for freeresponse, form in free_forms %}
-                <div class="ui basic padded segment left aligned">
+                <div style="margin-top: 10px;"  class="ui basic padded segment left aligned">
                     <div class="ui form {% if form.errors %}error{% endif %}">
                         <h4 class="ui header">
                             Question {{ forloop.counter }}: {{ freeresponse.response }}

@@ -83,7 +83,7 @@
                                     </form>
                                     {% if options|length > 0 %}
                                     <div class="ui divider"></div>
-                                    <a href="{% url 'edit_assessment' peer_assessment.pk %}">
+                                    <a href="{% url 'edit_assessment' peer_assessment.pk course_pk%}">
                                         <div class="btn btn-secondary">Done adding options</div>
                                     </a>
                                     {% endif %}
