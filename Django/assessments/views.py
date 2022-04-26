@@ -18,6 +18,7 @@ from django.forms.formsets import formset_factory
 from django.db import transaction
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.models import Group
 
 # Create your views here.
 @login_required
@@ -141,7 +142,7 @@ def create_free_response(request, peer_assessment_pk,course_pk):
 
 @login_required
 def assessments_list(request,course_pk):
-    peer_assessments = PeerAssessment.objects.filter(creator=request.user).order_by("-creation_date").all()
+    peer_assessments = PeerAssessment.objects.filter(creator=request.user).filter(course_id=course_pk).order_by("-creation_date").all()
     curr = Course.objects.get(course_id=course_pk)
     data = {
         "course_list": get_user_registrations(request),
@@ -167,7 +168,9 @@ def start_assessment(request, peer_assessment_pk):
             sub.save()
             print("valid form saved")
             return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
-    else: 
+    else:
+        groups = Group.objects.filter(user = request.user)
+        print(len(groups))
         form = SubmissionForm()
 
     return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment, "form": form})
