@@ -87,6 +87,7 @@ def add_student_view(request,course_pk):
 		form=AddStudentForm(request.POST)
 		if form.is_valid():
 			data=form.cleaned_data
+			
 			invite_students(request,data,course_pk,course_name)
 			return redirect('../../users')
 	context = {'course_name':course_name}
