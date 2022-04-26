@@ -41,6 +41,12 @@
                             <button class="btn btn-primary btn-block" type="submit" name="shuffle">Shuffle Teams</button>
                         </form>
                 </div>
+                <div class="row mb-4 md-4">
+                        <form method="POST" action="{% url 'delete_course' current_course %}">
+                            {% csrf_token %}
+                            <button class="btn btn-primary btn-block" type="submit" name="delete">Delete Course</button>
+                        </form>
+                </div>
                 {% endif %}
                 {% for team in teams %}
                 <h4 class="mt-4">{{team.team_name}}</h4>
