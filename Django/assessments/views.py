@@ -18,7 +18,8 @@ from django.forms.formsets import formset_factory
 from django.db import transaction
 from datetime import datetime
 from django.utils import timezone
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
+from django import forms
 
 # Create your views here.
 @login_required
@@ -149,22 +150,34 @@ def assessments_list(request,course_pk):
         "invitations": get_user_invitations(request),
         "peer_assessments": peer_assessments,
         "current_course_name": curr.name,
-        "course_pk": course_pk
+        "course_pk": course_pk,
     }
     return render(request, "assessments/assessments_list.html", data)
 
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
+<<<<<<< HEAD
     if peer_assessment.get(end_date) < datetime.today():
         peer_assessment.is_active = False
         return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
+=======
+
+    groups = request.user.groups.all()
+    groupmates = User.objects.all()
+
+    for g in groups:
+        print(g.name)
+        groupmates = User.objects.filter(groups__name=g.name)
+
+>>>>>>> 9622378559e17f6ca17893af2250e6c79ca97d15
     if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
         print("after end date")
         return redirect("home")
     if request.method == "POST":
         form = SubmissionForm(request.POST)
+        form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
         if form.is_valid():
             sub = form.save(commit=False)
             sub.peer_assessment = peer_assessment
@@ -172,9 +185,8 @@ def start_assessment(request, peer_assessment_pk):
             print("valid form saved")
             return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
     else:
-        groups = Group.objects.filter(user = request.user)
-        print(len(groups))
         form = SubmissionForm()
+        form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
 
     return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment, "form": form})
     
