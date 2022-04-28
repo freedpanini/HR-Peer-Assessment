@@ -157,11 +157,9 @@ def assessments_list(request,course_pk):
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-<<<<<<< HEAD
     if peer_assessment.get(end_date) < datetime.today():
         peer_assessment.is_active = False
         return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
-=======
 
     groups = request.user.groups.all()
     groupmates = User.objects.all()
@@ -170,7 +168,6 @@ def start_assessment(request, peer_assessment_pk):
         print(g.name)
         groupmates = User.objects.filter(groups__name=g.name)
 
->>>>>>> 9622378559e17f6ca17893af2250e6c79ca97d15
     if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
         print("after end date")
