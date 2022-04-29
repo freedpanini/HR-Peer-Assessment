@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'courses',
     'multiselectfield',
+    'django_extensions',
     'assessments'
 ]
 
