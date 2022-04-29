@@ -7,15 +7,16 @@ from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
 import math, random
-<<<<<<< Updated upstream
-=======
+# <<<<<<< Updated upstream
+# =======
 
->>>>>>> Stashed changes
+# >>>>>>> Stashed changes
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
 	if request.method == "POST":
 		form = CourseForm(request.POST)
+		print(form)
 		if form.is_valid():
 			data = form.cleaned_data
 			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code'],professor=request.user.email).course_id
@@ -30,7 +31,9 @@ def course_creation_view(request):
 def team_creation_view(request, course_pk):
 	form=TeamForm()
 	if request.method=="POST":
+		print(request)
 		form=TeamForm(request.POST)
+		print(form)
 		if form.is_valid():
 			current_num_teams = len(Team.objects.filter(course_id=course_pk))
 			Team.objects.create(team_name=request.POST['team_name'], course_id=course_pk, team_num=current_num_teams)
@@ -84,12 +87,15 @@ def add_student_view(request,course_pk):
 	form=AddStudentForm()
 	course_name=Course.objects.get(course_id=course_pk).name
 	if request.method=="POST":
+		print(request)
+		print("request is POST")
 		form=AddStudentForm(request.POST)
+		print(form)
 		if form.is_valid():
+			print("valid")
 			data=form.cleaned_data
-			
 			invite_students(request,data,course_pk,course_name)
-			return redirect('../../users')
+			return redirect('./users')
 	context = {'course_name':course_name}
 	return render(request, "courses/add_student.html", context)
 
@@ -149,6 +155,7 @@ def invite_students(request, data, course_id, course_name):
 			i -= 1
 		i += 1
 	send_email(request, emails, data['code'], data['name'])
+	#rediredt("../../users")
 
 # def accept_invite(request, student, course_id):
 # 	Invitation.objects.get(student=student, course_id=course_id).delete()

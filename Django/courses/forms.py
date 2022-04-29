@@ -19,4 +19,4 @@ class TeamSwapForm(forms.Form):
 	team_id 	= forms.DecimalField(max_digits=20,required=True)
 
 class AddStudentForm(forms.Form):
-	emails 		= forms.CharField()
+	student_emails 		= forms.CharField()
