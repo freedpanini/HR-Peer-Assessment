@@ -64,6 +64,8 @@ def edit_assessment(request, pk, course_pk):
     except PeerAssessment.DoesNotExist:
         raise Http404()
 
+    questions = peer_assessment.question_set.all()
+    frees = peer_assessment2.freeresponse_set.all()
     if request.method == "POST":
         peer_assessment.is_active = True
         peer_assessment.save()
@@ -95,8 +97,7 @@ def edit_assessment(request, pk, course_pk):
             "frees":frees, 
             "course_pk": course_pk
         }
-        questions = peer_assessment.question_set.all()
-        frees = peer_assessment2.freeresponse_set.all()
+        
         return render(request, "assessments/edit_assessment.html", data)
 
 @login_required
@@ -196,11 +197,12 @@ def assessments_list(request,course_pk):
         "peer_assessments": peer_assessments,
         "current_course_name": curr.name,
         "course_pk": course_pk,
+        "user": request.user
     }
     return render(request, "assessments/assessments_list.html", data)
 
 @login_required
-def start_assessment(request, peer_assessment_pk):
+def start_assessment(request, peer_assessment_pk,course_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
     if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
@@ -225,7 +227,7 @@ def start_assessment(request, peer_assessment_pk):
             sub.peer_assessment = peer_assessment
             sub.save()
             print("valid form saved")
-            return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
+            return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk, course_pk = course_pk)
     else:
         form = SubmissionForm()
         form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
@@ -242,7 +244,7 @@ def start_assessment(request, peer_assessment_pk):
     return render(request, "assessments/start_assessment.html", data)
     
 @login_required
-def submit_assessment(request, peer_assessment_pk, sub_pk):
+def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
     try:
         peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
             pk=peer_assessment_pk, is_active=True

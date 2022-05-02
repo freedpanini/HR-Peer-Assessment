@@ -27,61 +27,52 @@
         <div class="ui left aligned basic very padded segment">
             <h2 style="margin-bottom: 30px;" class="ui header">Your Peer Assessments</h2>
                 {% if peer_assessments %}
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            Peer Assessments
-                        </div>
-                        <table id="datatablesSimple" class="ui celled table">
-                                        <thead>
-                                            <tr>
-                                                <th>Title</th>
-                                                <th>Created At</th>
-                                                <th>Due Date</th>
-                                                <th>Course ID</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for peer_assessment in peer_assessments %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'start_assessment' peer_assessment.pk %}">
-                                                        {{ peer_assessment.title }}
-                                                    </a>
-                                                </td>
-                                                <td>{{ peer_assessment.creation_date }}</td>
-                                                <td>{{ peer_assessment.end_date }}</td>
-                                                <td>{{ peer_assessment.course_id }}</td>
-                                                <td>
-                                                    {% if peer_assessment.is_active %}
-                                                    <p>Active</p>
-                                                    {% else %}
-                                                    <a href="{% url  'edit_assessment' peer_assessment.pk course_pk%}">
-                                                        <div class="ui button">edit</div>
-                                                    </a>
-                                                    {% endif %}
-                                
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
+                <div class="row col-md-12">
+                    {% for peer_assessment in peer_assessments %}
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-secondary text-white mb-4">
+                            <div class="card-body">
+                                {% if user.is_authenticated %}
+                                {% if peer_assessment.is_active %}
+                                <a class="small text-white stretched-link" style="z-index: 10;" href="{% url 'start_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
+                                {% else %}
+                                <a class="small text-white stretched-link" style="z-index: 10; color: white;" href="{% url 'edit_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
+                                {% endif %}
                                 
                                 {% else %}
-                                <h2 class="ui header">
-                                    <div class="sub header">You don't have any peer assessments yet, try creating one first!</div>
-                                </h2>
+                                {% if peer_assessment.is_active %}
+                                <a class="small text-white stretched-link" style="z-index: 10;" href="{% url 'start_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
+                                {% else %}
+                                {{peer_assessment.title}}
                                 {% endif %}
 
-                                <a href="{% url 'create_assessment' course_pk%}">
-
-                                    <div class="ui primary button">Create a new survey</div>
-                                </a>
-                            
+                                {% endif %}
+                            </div>
+                            <div style="background-color: white;" class="card-footer d-flex align-items-center justify-content-between small text-black">
+                                {% if peer_assessment.is_active %}
+                                Due: {{peer_assessment.end_date}}
+                                {% else %}
+                                Not Active
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                {% endblock %}
+                    {% endfor %}
+                </div>
+                                
+                                
+                {% else %}
+                    <h2 class="ui header">
+                        <div class="sub header">You don't have any peer assessments yet, try creating one first!</div>
+                    </h2>
+                {% endif %}
+
+                    <a href="{% url 'create_assessment' course_pk%}">
+                        <div class="ui primary button">Create a new survey</div>
+                    </a>
+                            
+        </div>
+    </div>
+</div>
+              
+                    {% endblock %}
