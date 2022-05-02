@@ -8,6 +8,7 @@ from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
 import math, random
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 # <<<<<<< Updated upstream
@@ -15,6 +16,9 @@ import math, random
 
 # >>>>>>> Stashed changes
 >>>>>>> d739cf1e48e779bfd24b879bce31eb15d6f667d8
+=======
+
+>>>>>>> 6262940ccba304a678c97b675400c70a20b24693
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
