@@ -46,9 +46,9 @@ urlpatterns = [
     path('<int:course_pk>/assessments_list/', assessment_views.assessments_list, name='assessments_list'),
     path('<int:course_pk>/add_student', add_student_view,name='add_student'),
     path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
-    path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment"),
-    path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
-    path("<int:peer_assessment_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
+    path("<int:peer_assessment_pk>/<int:course_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment"),
+    path("<int:peer_assessment_pk>/<int:course_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
+    path("<int:peer_assessment_pk>/<int:course_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
 
 
 ]
