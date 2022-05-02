@@ -45,7 +45,11 @@
                                         <tbody>
                                             {% for peer_assessment in peer_assessments %}
                                             <tr>
-                                                <td>{{ peer_assessment.title }}</td>
+                                                <td>
+                                                    <a href="{% url 'start_assessment' peer_assessment.pk %}">
+                                                        {{ peer_assessment.title }}
+                                                    </a>
+                                                </td>
                                                 <td>{{ peer_assessment.creation_date }}</td>
                                                 <td>{{ peer_assessment.end_date }}</td>
                                                 <td>{{ peer_assessment.course_id }}</td>
