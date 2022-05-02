@@ -35,7 +35,17 @@ def create_assessment(request, course_pk):
     else:
         form = PeerAssessmentForm()
 
-    return render(request, "assessments/create_assessment.html", {"form": form, "course_pk": course_pk})
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "current_course": course_pk,
+        "form": form, 
+        "course_pk": course_pk
+    }
+    
+
+    return render(request, "assessments/create_assessment.html", data)
 
 @login_required
 def edit_assessment(request, pk, course_pk):
@@ -54,6 +64,8 @@ def edit_assessment(request, pk, course_pk):
     except PeerAssessment.DoesNotExist:
         raise Http404()
 
+    questions = peer_assessment.question_set.all()
+    frees = peer_assessment2.freeresponse_set.all()
     if request.method == "POST":
         peer_assessment.is_active = True
         peer_assessment.save()
@@ -75,9 +87,18 @@ def edit_assessment(request, pk, course_pk):
 
         return redirect("home")
     else:
-        questions = peer_assessment.question_set.all()
-        frees = peer_assessment2.freeresponse_set.all()
-        return render(request, "assessments/edit_assessment.html", {"peer_assessment": peer_assessment, "questions": questions, "frees":frees, "course_pk": course_pk})
+        data = {
+            "course_list": get_user_registrations(request),
+            "invitations": get_user_invitations(request),
+            "current_course_name": Course.objects.get(course_id=course_pk).name,
+            "peer_assessment": peer_assessment, 
+            "questions": questions, 
+            "current_course": course_pk,
+            "frees":frees, 
+            "course_pk": course_pk
+        }
+        
+        return render(request, "assessments/edit_assessment.html", data)
 
 @login_required
 def delete_assessment(request, pk):
@@ -99,8 +120,16 @@ def create_question(request, pk, course_pk):
             return redirect("create_options", peer_assessment_pk=pk, question_pk=question.pk,course_pk = course_pk)
     else:
         form = QuestionForm()
-
-    return render(request, "assessments/create_question.html", {"peer_assessment": peer_assessment, "form": form, "course_pk": course_pk})
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "peer_assessment": peer_assessment, 
+        "form": form, 
+        "course_pk": course_pk
+    }
+    return render(request, "assessments/create_question.html", data)
 
 @login_required
 def create_options(request, peer_assessment_pk, question_pk,course_pk):
@@ -117,10 +146,18 @@ def create_options(request, peer_assessment_pk, question_pk,course_pk):
         form = OptionForm()
 
     options = question.option_set.all()
-    return render(request, "assessments/create_options.html", {
-        "peer_assessment": peer_assessment, "question": question, "options": options, "form": form, "course_pk":course_pk
-        },
-    )
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "peer_assessment": peer_assessment, 
+        "question": question, 
+        "options": options, 
+        "form": form, 
+        "course_pk":course_pk
+    }
+    return render(request, "assessments/create_options.html", data)
 
 @login_required
 def create_free_response(request, peer_assessment_pk,course_pk):
@@ -137,9 +174,18 @@ def create_free_response(request, peer_assessment_pk,course_pk):
     else: 
         form = FreeResponseForm()
         print("INVALID")
-    return render(request, "assessments/create_free_response.html", {
-        "peer_assessment": peer_assessment,  "form": form ,"course_pk": course_pk} #, "question": question, "options": response, "form": form},
-    )        
+
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "peer_assessment": peer_assessment,  
+        "form": form ,
+        "course_pk": course_pk
+    }
+    #, "question": question, "options": response, "form": form},
+    return render(request, "assessments/create_free_response.html", data)        
 
 @login_required
 def assessments_list(request,course_pk):
@@ -151,13 +197,14 @@ def assessments_list(request,course_pk):
         "peer_assessments": peer_assessments,
         "current_course_name": curr.name,
         "course_pk": course_pk,
+        "user": request.user
     }
     return render(request, "assessments/assessments_list.html", data)
 
 @login_required
-def start_assessment(request, peer_assessment_pk):
+def start_assessment(request, peer_assessment_pk,course_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-    if peer_assessment.get(end_date) < datetime.today():
+    if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
         return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
 
@@ -180,15 +227,24 @@ def start_assessment(request, peer_assessment_pk):
             sub.peer_assessment = peer_assessment
             sub.save()
             print("valid form saved")
-            return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
+            return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk, course_pk = course_pk)
     else:
         form = SubmissionForm()
         form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
 
-    return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment, "form": form})
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "peer_assessment": peer_assessment, 
+        "form": form
+    }
+
+    return render(request, "assessments/start_assessment.html", data)
     
 @login_required
-def submit_assessment(request, peer_assessment_pk, sub_pk):
+def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
     try:
         peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
             pk=peer_assessment_pk, is_active=True
@@ -236,11 +292,18 @@ def submit_assessment(request, peer_assessment_pk, sub_pk):
     question_forms = zip(questions, formset)
     free_forms = zip(freeresponses, freeformset)
     print(len(freeresponses), len(freeformset))
-    return render(
-        request,
-        "assessments/submit_assessment.html",
-        {"peer_assessment": peer_assessment, "question_forms": question_forms, "formset": formset, "free_forms": free_forms, "freeformset": freeformset},
-    )
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "peer_assessment": peer_assessment, 
+        "question_forms": question_forms, 
+        "formset": formset, 
+        "free_forms": free_forms, 
+        "freeformset": freeformset
+    }
+    return render(request, "assessments/submit_assessment.html", data)
 
 def get_user_registrations(request):
     if request.user.is_staff:
