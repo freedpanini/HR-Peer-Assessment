@@ -72,7 +72,7 @@
                                 </h2>
                                 {% endif %}
 
-                                <a href="{% url 'create_question' peer_assessment.pk %}">
+                                <a href="{% url 'create_question' peer_assessment.pk peer_assessment.course_id%}">
 
                                 <a href="{% url 'create_assessment' course_pk%}">
 
