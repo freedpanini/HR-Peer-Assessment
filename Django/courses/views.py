@@ -7,10 +7,7 @@ from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
 import math, random
-# <<<<<<< Updated upstream
-# =======
 
-# >>>>>>> Stashed changes
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
@@ -86,14 +83,15 @@ def add_student_view(request,course_pk):
 	# 		course_name=Course.objects.get(course_id=course_pk).name
 	form=AddStudentForm()
 	course_name=Course.objects.get(course_id=course_pk).name
+	print("add_student for " + course_name)
 	if request.method=="POST":
-		print(request)
+		print(request.POST)
 		print("request is POST")
 		form=AddStudentForm(request.POST)
-		print(form)
 		if form.is_valid():
 			print("valid")
 			data=form.cleaned_data
+			data['name'] = course_name
 			invite_students(request,data,course_pk,course_name)
 			return redirect('./users')
 	context = {'course_name':course_name}
@@ -108,8 +106,10 @@ def shuffle_teams(request, course_pk):
 		return redirect('../users')
 	for student in student_registrations:
 		selected_team = teams[random.randint(0, len(teams)-1)].team_id
+		print(f"Trying to switch {student.student} to team {selected_team}")
 		while len(Registration.objects.filter(team_id=selected_team)) >= max_students_per_team:
 			selected_team = teams[random.randint(0, len(teams)-1)].team_id
+			print(f"Trying to switch {student.student} to team {selected_team}")
 		student.team_id = selected_team
 		student.save()
 	return redirect('../users')
@@ -126,10 +126,9 @@ def delete_course(request, course_pk):
 	Course.objects.get(course_id=course_pk).delete()
 	return redirect('home')
 
-def send_email(request, emails, code, name):
+def send_email(request, emails, name):
 	ctx={
 		'name':name,
-		'code':code,
 	}
 	message=render_to_string('courses/email.html',ctx)
 	send_mail(f'You\'ve been added to {name}! ',
@@ -154,7 +153,7 @@ def invite_students(request, data, course_id, course_name):
 			emails.pop(i)
 			i -= 1
 		i += 1
-	send_email(request, emails, data['code'], data['name'])
+	send_email(request, emails, data['name'])
 	#rediredt("../../users")
 
 # def accept_invite(request, student, course_id):
