@@ -18,6 +18,8 @@ from django.forms.formsets import formset_factory
 from django.db import transaction
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.models import Group, User
+from django import forms
 
 # Create your views here.
 @login_required
@@ -141,34 +143,47 @@ def create_free_response(request, peer_assessment_pk,course_pk):
 
 @login_required
 def assessments_list(request,course_pk):
-    peer_assessments = PeerAssessment.objects.filter(creator=request.user).order_by("-creation_date").all()
+    peer_assessments = PeerAssessment.objects.filter(creator=request.user).filter(course_id=course_pk).order_by("-creation_date").all()
     curr = Course.objects.get(course_id=course_pk)
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request),
         "peer_assessments": peer_assessments,
         "current_course_name": curr.name,
-        "course_pk": course_pk
+        "course_pk": course_pk,
     }
     return render(request, "assessments/assessments_list.html", data)
 
 @login_required
 def start_assessment(request, peer_assessment_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
+    if peer_assessment.get(end_date) < datetime.today():
+        peer_assessment.is_active = False
+        return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
+
+    groups = request.user.groups.all()
+    groupmates = User.objects.all()
+
+    for g in groups:
+        print(g.name)
+        groupmates = User.objects.filter(groups__name=g.name)
+
     if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
         print("after end date")
         return redirect("home")
     if request.method == "POST":
         form = SubmissionForm(request.POST)
+        form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
         if form.is_valid():
             sub = form.save(commit=False)
             sub.peer_assessment = peer_assessment
             sub.save()
             print("valid form saved")
             return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk)
-    else: 
+    else:
         form = SubmissionForm()
+        form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
 
     return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment, "form": form})
     

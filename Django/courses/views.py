@@ -6,12 +6,21 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from users.views import get_user_invitations, get_user_registrations
 from django.contrib.auth.models import User
+import math, random
+<<<<<<< HEAD
+# <<<<<<< Updated upstream
+# =======
 
+# >>>>>>> Stashed changes
+=======
+
+>>>>>>> 3e35ca582bf0c19e7190cd24b330a75dc086bd96
 # Create your views here.
 def course_creation_view(request):
 	form = CourseForm()
 	if request.method == "POST":
 		form = CourseForm(request.POST)
+		print(form)
 		if form.is_valid():
 			data = form.cleaned_data
 			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code'],professor=request.user.email).course_id
@@ -26,7 +35,9 @@ def course_creation_view(request):
 def team_creation_view(request, course_pk):
 	form=TeamForm()
 	if request.method=="POST":
+		print(request)
 		form=TeamForm(request.POST)
+		print(form)
 		if form.is_valid():
 			current_num_teams = len(Team.objects.filter(course_id=course_pk))
 			Team.objects.create(team_name=request.POST['team_name'], course_id=course_pk, team_num=current_num_teams)
@@ -70,10 +81,6 @@ def team_swap_view(request, course_pk, student_id):
 			}
 	return render(request, "courses/team_swap.html", context)
 
-# <<<<<<< HEAD
-# =======
-
-# >>>>>>> 51b6d60f567b0caa3a49db061455463631249ca2
 def add_student_view(request,course_pk):
 	# form = AddStudentForm()
 	# if request.method == "POST":
@@ -81,18 +88,21 @@ def add_student_view(request,course_pk):
 	# 	if form.is_valid():
 	# 		data = form.cleaned_data
 	# 		course_name=Course.objects.get(course_id=course_pk).name
-	form=CourseForm
+	form=AddStudentForm()
 	course_name=Course.objects.get(course_id=course_pk).name
 	if request.method=="POST":
-		form=CourseForm(request.POST)
+		print(request)
+		print("request is POST")
+		form=AddStudentForm(request.POST)
+		print(form)
 		if form.is_valid():
+			print("valid")
 			data=form.cleaned_data
 			invite_students(request,data,course_pk,course_name)
-			return redirect('../../users')
+			return redirect('./users')
 	context = {'course_name':course_name}
 	return render(request, "courses/add_student.html", context)
-# <<<<<<< HEAD
-# =======
+
 
 def shuffle_teams(request, course_pk):
 	teams = Team.objects.filter(course_id=course_pk)
@@ -113,7 +123,12 @@ def remove_student(request, course_pk, student_id):
 	Registration.objects.get(course_id=course_pk,student=student_email).delete()
 	return redirect('../../users')
 
-# >>>>>>> 51b6d60f567b0caa3a49db061455463631249ca2
+def delete_course(request, course_pk):
+	Invitation.objects.filter(course_id=course_pk).delete()
+	Registration.objects.filter(course_id=course_pk).delete()
+	Team.objects.filter(course_id=course_pk).delete()
+	Course.objects.get(course_id=course_pk).delete()
+	return redirect('home')
 
 def send_email(request, emails, code, name):
 	ctx={
@@ -144,6 +159,7 @@ def invite_students(request, data, course_id, course_name):
 			i -= 1
 		i += 1
 	send_email(request, emails, data['code'], data['name'])
+	#rediredt("../../users")
 
 # def accept_invite(request, student, course_id):
 # 	Invitation.objects.get(student=student, course_id=course_id).delete()
@@ -188,9 +204,4 @@ def switch_team(request, student, course_id, team_id):
 	reg = Registration.objects.get(student=student,course_id=course_id)
 	reg.team_id = team_id
 	reg.save()
-# <<<<<<< HEAD
-
-
-# =======
-# >>>>>>> 51b6d60f567b0caa3a49db061455463631249ca2
 

@@ -19,16 +19,17 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            {% csrf_token %}
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4"> Add Student to {{course_name}} </h3></div>
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Add Student for {{course_name}}</h3></div>
                             <div class="card-body">
-                                <form action = '.' method='POST'>
+                                <form action = './users' method='POST'>
+                                    {% csrf_token %}
+
                                     <div class="form-floating mb-3">
-                                        <input name="emails" class="form-control" id="inputEmails" type="text" placeholder="crewsz@bc.edu" />
+                                        <input name="student_emails" class="form-control" id="inputEmails" type="text" placeholder="crewsz@bc.edu" />
                                         <label for="inputEmails">Student Emails (separated by commas)</label>
                                     </div>
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><a class="btn btn-primary btn-block" href='../../users'>Add Student</a></div>
+                                        <div class="d-grid"><a class="btn btn-primary btn-block"><input type='submit' value='Add Student' class="btn btn-primary"></a></div>
                                     </div>
                                 </form>
                             </div>
