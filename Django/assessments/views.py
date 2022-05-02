@@ -76,7 +76,7 @@ def edit_assessment(request, pk, course_pk):
         print(student_emails)
 
         host = request.get_host()
-        public_path = reverse("start_assessment", args=[pk])
+        public_path = reverse("start_assessment", args=[pk, course_pk])
         url = f"{request.scheme}://{host}{public_path}"
 
         send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
