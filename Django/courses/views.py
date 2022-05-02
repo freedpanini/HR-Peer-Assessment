@@ -102,16 +102,20 @@ def shuffle_teams(request, course_pk):
 	teams = Team.objects.filter(course_id=course_pk)
 	student_registrations = Registration.objects.filter(course_id=course_pk)
 	max_students_per_team = math.ceil(len(student_registrations)/len(teams))
-	if len(teams) == 1:
-		return redirect('../users')
+
+	# Remove students from teams
+	for student in student_registrations:
+		student.team_id = -1
+		student.save()
+
+	# Assign students to teams
 	for student in student_registrations:
 		selected_team = teams[random.randint(0, len(teams)-1)].team_id
-		print(f"Trying to switch {student.student} to team {selected_team}")
 		while len(Registration.objects.filter(team_id=selected_team)) >= max_students_per_team:
 			selected_team = teams[random.randint(0, len(teams)-1)].team_id
-			print(f"Trying to switch {student.student} to team {selected_team}")
 		student.team_id = selected_team
 		student.save()
+
 	return redirect('../users')
 
 def remove_student(request, course_pk, student_id):
