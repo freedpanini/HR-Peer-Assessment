@@ -94,14 +94,15 @@ def add_student_view(request,course_pk):
 	# 		course_name=Course.objects.get(course_id=course_pk).name
 	form=AddStudentForm()
 	course_name=Course.objects.get(course_id=course_pk).name
+	print("add_student for " + course_name)
 	if request.method=="POST":
-		print(request)
+		print(request.POST)
 		print("request is POST")
 		form=AddStudentForm(request.POST)
-		print(form)
 		if form.is_valid():
 			print("valid")
 			data=form.cleaned_data
+			data['name'] = course_name
 			invite_students(request,data,course_pk,course_name)
 			return redirect('./users')
 	context = {'course_name':course_name}
@@ -112,14 +113,20 @@ def shuffle_teams(request, course_pk):
 	teams = Team.objects.filter(course_id=course_pk)
 	student_registrations = Registration.objects.filter(course_id=course_pk)
 	max_students_per_team = math.ceil(len(student_registrations)/len(teams))
-	if len(teams) == 1:
-		return redirect('../users')
+
+	# Remove students from teams
+	for student in student_registrations:
+		student.team_id = -1
+		student.save()
+
+	# Assign students to teams
 	for student in student_registrations:
 		selected_team = teams[random.randint(0, len(teams)-1)].team_id
 		while len(Registration.objects.filter(team_id=selected_team)) >= max_students_per_team:
 			selected_team = teams[random.randint(0, len(teams)-1)].team_id
 		student.team_id = selected_team
 		student.save()
+
 	return redirect('../users')
 
 def remove_student(request, course_pk, student_id):
@@ -134,10 +141,9 @@ def delete_course(request, course_pk):
 	Course.objects.get(course_id=course_pk).delete()
 	return redirect('home')
 
-def send_email(request, emails, code, name):
+def send_email(request, emails, name):
 	ctx={
 		'name':name,
-		'code':code,
 	}
 	message=render_to_string('courses/email.html',ctx)
 	send_mail(f'You\'ve been added to {name}! ',
@@ -162,7 +168,7 @@ def invite_students(request, data, course_id, course_name):
 			emails.pop(i)
 			i -= 1
 		i += 1
-	send_email(request, emails, data['code'], data['name'])
+	send_email(request, emails, data['name'])
 	#rediredt("../../users")
 
 # def accept_invite(request, student, course_id):
