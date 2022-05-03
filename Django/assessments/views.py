@@ -84,6 +84,7 @@ def edit_assessment(request, pk, course_pk):
         settings.EMAIL_HOST_USER,
         student_emails,
         fail_silently=False,html_message=url)
+
         return redirect("home")
     else:
         data = {
@@ -140,6 +141,7 @@ def create_options(request, peer_assessment_pk, question_pk,course_pk):
         if form.is_valid():
             option = form.save(commit=False)
             option.question_id = question_pk
+            print(option.value)
             option.save()
     else:
         form = OptionForm()
@@ -259,10 +261,17 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
 
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
     freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
+    free_formset_labels = []
+    for q in freeresponses:
+        free_formset_labels.append(q.response) 
 
+    print("LABELS", free_formset_labels)
+    print(len(free_formset_labels))
+    
     if request.method == "POST":
         formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
         freeformset = freeResponsesFormSet()
+
         if formset.is_valid():
             with transaction.atomic():
                 for form in formset:
@@ -271,7 +280,6 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
                     freeresponse = form2.save(commit=False)
                     freeresponse.submission = sub
                     freeresponse.save()
-                    print("here")
 
                 sub.is_complete = True
                 sub.save()
@@ -284,9 +292,10 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         formset = AnswerFormSet(form_kwargs=form_kwargs)
         freeformset = freeResponsesFormSet()
 
+
     question_forms = zip(questions, formset)
-    free_forms = zip(freeresponses, freeformset)
-    print(len(freeresponses), len(freeformset))
+
+
     data = {
         "course_list": get_user_registrations(request),
         "invitations": get_user_invitations(request),
@@ -295,7 +304,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         "peer_assessment": peer_assessment, 
         "question_forms": question_forms, 
         "formset": formset, 
-        "free_forms": free_forms, 
+ 
         "freeformset": freeformset
     }
     return render(request, "assessments/submit_assessment.html", data)

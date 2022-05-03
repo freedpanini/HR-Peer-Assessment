@@ -22,6 +22,7 @@ class Question(models.Model):
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     option_text = models.CharField(max_length=256)
+    value = models.IntegerField()
 
 class Submission(models.Model):
     peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)

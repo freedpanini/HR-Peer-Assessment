@@ -22,7 +22,7 @@ class FreeResponseForm(forms.ModelForm):
 class OptionForm(forms.ModelForm):
     class Meta:
         model = Option
-        fields = ["option_text"]
+        fields = ["option_text", "value"]
 
 class AnswerForm(forms.Form):
     def __init__(self, *args, **kwargs):
