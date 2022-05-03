@@ -43,7 +43,7 @@ def create_assessment(request, course_pk):
         "form": form, 
         "course_pk": course_pk
     }
-    
+    email_students_survey(request, data, '', data['name'])
 
     return render(request, "assessments/create_assessment.html", data)
 
@@ -363,3 +363,65 @@ def get_user_invitations(request):
     if not request.user.is_staff:
         invitations = Invitation.objects.filter(student=request.user.email)
     return invitations
+
+def assessment_release_email(request, emails, name):
+    ctx={
+        'name':name,
+    }
+    message=render_to_string('assessments/assessment_email.html',ctx)
+    send_mail(f'The survey for this assignment are not ready to be filled out',
+    message,
+    settings.EMAIL_HOST_USER,
+    emails,
+    fail_silently=False,html_message=message)
+    return render(request, 'courses/send_email.html',{})
+
+def results_published_email(request, emails, name):
+    ctx={
+        'name':name,
+    }
+    message=render_to_string('assessments/results_email.html',ctx)
+    send_mail(f'The results are now available to view ',
+    message,
+    settings.EMAIL_HOST_USER,
+    emails,
+    fail_silently=False,html_message=message)
+    return render(request, 'courses/send_email.html',{})
+
+#course_id no longer in use, submit blank string
+def email_students_survey(request, data, course_id, course_name):
+    emails = data['emails']
+    if emails is None or len(emails) == 0:
+        return
+    emails = emails.split(",")
+    i = 0
+    while i < len(emails):
+        emails[i] = emails[i].strip()
+        # prevent duplicate invitations
+        if Invitation.objects.filter(student=emails[i], course_id=course_id).count() == 0 and Registration.objects.filter(student=emails[i], course_id=course_id).count() == 0:
+            Invitation.objects.create(student=emails[i], course_id=course_id, name=course_name)
+        else:
+            emails.pop(i)
+            i -= 1
+        i += 1
+    assessment_release_email(request, emails, data['name'])
+
+def email_students_results(request, data, course_id, course_name):
+    emails = data['emails']
+    if emails is None or len(emails) == 0:
+        return
+    emails = emails.split(",")
+    i = 0
+    while i < len(emails):
+        emails[i] = emails[i].strip()
+        # prevent duplicate invitations
+        if Invitation.objects.filter(student=emails[i], course_id=course_id).count() == 0 and Registration.objects.filter(student=emails[i], course_id=course_id).count() == 0:
+            Invitation.objects.create(student=emails[i], course_id=course_id, name=course_name)
+        else:
+            emails.pop(i)
+            i -= 1
+        i += 1
+    results_published_email(request, emails, data['name'])
+
+
+
