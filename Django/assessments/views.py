@@ -203,10 +203,6 @@ def assessments_list(request,course_pk):
 @login_required
 def start_assessment(request, peer_assessment_pk,course_pk):
     peer_assessment = get_object_or_404(PeerAssessment, pk=peer_assessment_pk, is_active=True)
-    if peer_assessment.end_date < timezone.now():
-        peer_assessment.is_active = False
-        return render(request, "assessments/start_assessment.html", {"peer_assessment": peer_assessment})
-
     groups = request.user.groups.all()
     groupmates = User.objects.all()
 
@@ -217,7 +213,7 @@ def start_assessment(request, peer_assessment_pk,course_pk):
     if peer_assessment.end_date < timezone.now():
         peer_assessment.is_active = False
         print("after end date")
-        return redirect("home")
+        return redirect("assessment_results", peer_assessment_pk=peer_assessment_pk, course_pk=course_pk)
     if request.method == "POST":
         form = SubmissionForm(request.POST)
         form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
@@ -303,6 +299,45 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         "freeformset": freeformset
     }
     return render(request, "assessments/submit_assessment.html", data)
+
+def assessment_results(request, peer_assessment_pk, course_pk):
+    submissions = Submission.objects.filter(assigned_to=request.user, peer_assessment=peer_assessment_pk)
+    mc_response = {}  #mc_response is a hashmap of hashmaps where questions -> options -> occurrence of each option in submissions
+    for submission in submissions:
+        answers = Answer.objects.filter(submission=submission)
+        for answer in answers:  #collect mc answers
+            op = answer.option
+            q = op.question
+            if q.question in mc_response:
+                if op.option_text in mc_response[q.question]:
+                    mc_response[q.question][op.option_text] += 1
+                else:
+                    mc_response[q.question][op.option_text] = 1
+            else:
+                mc_response[q.question] = {}
+                mc_response[q.question][op.option_text] = 1
+        fr_answers = FreeResponseAnswer.objects.filter(submission=submission)
+
+        for fr_answer in fr_answers:    #TODO: collect free response answers
+            print(fr_answer.response_answer)
+
+    max_responses = {}
+
+    for key, value in mc_response.items():
+        max_val = max(value.items(), key=lambda x : x[1])
+        max_answers = max_val[0]
+        for k, v in value.items():  #handles case where multiple answers are most common
+            if k != max_val[0] and v == max_val[1]:
+                max_answers += ", " + k
+        max_responses[key] = max_answers
+    data = {
+        "course_list": get_user_registrations(request),
+        "invitations": get_user_invitations(request),
+        "current_course": course_pk,
+        "current_course_name": Course.objects.get(course_id=course_pk).name,
+        "mc_response": max_responses
+    }
+    return render(request, "assessments/assessment_results.html", data)
 
 def get_user_registrations(request):
     if request.user.is_staff:

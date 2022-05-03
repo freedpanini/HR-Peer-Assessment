@@ -5,16 +5,20 @@
 {% block course_header %}
 <!-- Course Title-->
 <div class="col">
-    <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto"><strong>{{current_course}}</strong></h1>
-</div>  
+    <h1 style="font-size: 1.75rem;" style="align-items:center" class="navbar-brand d-md-inline-block ms-auto">
+        <strong>{{current_course}}</strong></h1>
+</div>
 <!-- Logout dropdown-->
 <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{% url 'assessments_list' course_pk %}">Surveys</a></li>
             <li><a class="dropdown-item" href="{% url 'users' course_pk %}">People</a></li>
-            <li><hr class="dropdown-divider" /></li>
+            <li>
+                <hr class="dropdown-divider" />
+            </li>
             <li><a class="dropdown-item" href="/logout">Logout</a></li>
         </ul>
     </li>
@@ -22,7 +26,7 @@
 {% endblock %}
 
 {% block core_content %}
-    <div class="container-fluid px-4">
+<div class="container-fluid px-4">
 
     <h1 class="ui header">Editing Peer Assessment: {{peer_assessment.title}}</h1>
     <div class="ui container left aligned">
@@ -62,12 +66,12 @@
         </form>
         <div style="margin-bottom: 20px;" class="ui divider"></div>
         <a class="btn btn-secondary" href="{% url 'assessments_list' course_pk %}">
-           Back
+            Back
         </a>
     </div>
 
-                        
-        </div>
+
+</div>
 
 
 
