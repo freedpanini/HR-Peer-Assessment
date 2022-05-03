@@ -222,6 +222,8 @@ def start_assessment(request, peer_assessment_pk,course_pk):
         if form.is_valid():
             sub = form.save(commit=False)
             sub.peer_assessment = peer_assessment
+            sub.submitted_by = request.user
+            print("CREATOR",sub.submitted_by)
             sub.save()
             print("valid form saved")
             return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk, course_pk = course_pk)
@@ -294,6 +296,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
 
 
     question_forms = zip(questions, formset)
+    free_forms = zip(freeresponses, freeformset)
 
 
     data = {
@@ -303,8 +306,8 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         "current_course_name": Course.objects.get(course_id=course_pk).name,
         "peer_assessment": peer_assessment, 
         "question_forms": question_forms, 
-        "formset": formset, 
- 
+        "formset": formset,
+        "free_forms": free_forms, 
         "freeformset": freeformset
     }
     return render(request, "assessments/submit_assessment.html", data)

@@ -27,16 +27,19 @@ class Option(models.Model):
 class Submission(models.Model):
     peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
     is_complete = models.BooleanField(default=False)
-    assigned_to = models.ForeignKey(User,on_delete= models.CASCADE)
+    assigned_to = models.ForeignKey(User,on_delete= models.CASCADE, related_name="assigned")
+    submitted_by = models.ForeignKey(User,on_delete= models.CASCADE, default=None, related_name="creator")
 
 class Answer(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
 
-class FreeResponseAnswer(models.Model):
-    submission = models.ForeignKey(Submission,on_delete=models.CASCADE)
-    response_answer = models.CharField(max_length=256)
-
 class FreeResponse(models.Model):
     peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE, default=None)
     response = models.CharField(max_length=256)
+
+class FreeResponseAnswer(models.Model):
+    submission = models.ForeignKey(Submission,on_delete=models.CASCADE)
+    response_answer = models.CharField(max_length=256)
+    free_response = models.ForeignKey(FreeResponse, on_delete=models.CASCADE)
+
