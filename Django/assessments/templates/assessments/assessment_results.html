@@ -1,6 +1,4 @@
 {% extends "users/home.html" %}
-{% load static %}
-{% load crispy_forms_tags %}
 
 {% block course_header %}
 <!-- Course Title-->
@@ -27,18 +25,36 @@
 
 {% block core_content %}
 <div class="container-fluid px-4">
-    <div style="margin-left: 200px;" class="ui center aligned basic very padded segment">
-        <div class="ui left aligned basic very padded segment">
-            <div class="ui center aligned basic very padded segment">
-                <h1 class="ui header">Title: {{ peer_assessment.title }}
-                </h1>
-                <form method="post" action="" style="display: inline-block;">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <button type="submit" class="btn  btn-primary">Start Peer Assessment
-                </form>
-            </div>
-
+    <h1 class="mt-4">Peer Assesment Results Summary</h1>
+    <!-- INTRO -->
+    <div class="card mb-4">
+        <div class="card-body">
+            Below are your Peer Assessment Scores.
+        </div>
+    </div>
+    <!-- DATA TABLE -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Quantitative Results
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Most Frequent Answer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in mc_response.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td>{{value}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

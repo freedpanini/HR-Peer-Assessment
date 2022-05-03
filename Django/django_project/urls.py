@@ -48,7 +48,6 @@ urlpatterns = [
     path("<int:peer_assessment_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
     path("<int:peer_assessment_pk>/<int:course_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment"),
     path("<int:peer_assessment_pk>/<int:course_pk>/submit_assessment/<int:sub_pk>/", assessment_views.submit_assessment, name="submit_assessment"),
-    path("<int:peer_assessment_pk>/<int:course_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment")
-
-
+    path("<int:peer_assessment_pk>/<int:course_pk>/start_assessment/", assessment_views.start_assessment, name="start_assessment"),
+    path("<int:peer_assessment_pk>/<int:course_pk>/assessment_results/", assessment_views.assessment_results, name="assessment_results")
 ]
