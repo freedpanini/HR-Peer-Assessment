@@ -43,7 +43,7 @@ def create_assessment(request, course_pk):
         "form": form, 
         "course_pk": course_pk
     }
-    # email_students_survey(request, data, '', data['current_course_name'])
+    #email_students_survey(request, data['course_list'], data['course_pk'], data['current_course_name'])
 
     return render(request, "assessments/create_assessment.html", data)
 
@@ -398,7 +398,8 @@ def results_published_email(request, emails, name):
 
 #course_id no longer in use, submit blank string
 def email_students_survey(request, data, course_id, course_name):
-    emails = data['emails']
+    emails = data.get(course_id)
+
     if emails is None or len(emails) == 0:
         return
     emails = emails.split(",")
