@@ -49,7 +49,12 @@
                 </div>
                 {% endif %}
                 {% for team in teams %}
+                {% if user.is_staff%}
+                <a href="{% url 'rename_team' current_course team.team_id%}">
+                <h4 class="mt-4">{{team.team_name}}</h4></a>
+                {% else %}
                 <h4 class="mt-4">{{team.team_name}}</h4>
+                {% endif %}
                 {% if team.students %}
                 <table class="table" id="datatablesSimple">
                     <thead>

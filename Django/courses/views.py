@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Course, Team, Invitation, Registration
-from .forms import CourseForm, TeamForm, TeamSwapForm, AddStudentForm
+from .forms import CourseForm, TeamForm, TeamSwapForm, AddStudentForm, RenameTeamForm
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -17,7 +17,8 @@ def course_creation_view(request):
 		if form.is_valid():
 			data = form.cleaned_data
 			course_id = Course.objects.create(name=data['name'],semester=data['semester'],year=data['year'],code=data['code'],professor=request.user.email).course_id
-			Team.objects.create(team_name="Default Team",team_num=0,course_id=course_id)
+			for i in range(int(request.POST['num_teams'])):
+				Team.objects.create(team_name=f"Team {i+1}",team_num=i,course_id=course_id)
 			invite_students(request, data, course_id, data['name'])
 			return redirect('home')
 
@@ -73,6 +74,24 @@ def team_swap_view(request, course_pk, student_id):
 				'teams':teams
 			}
 	return render(request, "courses/team_swap.html", context)
+
+def rename_team_view(request, course_pk, team_pk):
+	form = RenameTeamForm()
+	if request.method == "POST":
+		form = RenameTeamForm(request.POST)
+		print(request.POST)
+		if form.is_valid():
+			print("VALID FORM")
+			team = Team.objects.get(team_id=team_pk)
+			team.team_name = request.POST['team_name']
+			team.save()
+			return redirect('../../users')
+	current_team_name = Team.objects.get(team_id=team_pk).team_name
+	context = {
+				'form':form,
+				'team':current_team_name
+			}
+	return render(request, "courses/rename_team.html", context)
 
 def add_student_view(request,course_pk):
 	# form = AddStudentForm()

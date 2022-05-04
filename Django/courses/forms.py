@@ -20,3 +20,6 @@ class TeamSwapForm(forms.Form):
 
 class AddStudentForm(forms.Form):
 	emails 		= forms.CharField()
+
+class RenameTeamForm(forms.Form):
+	team_name 	= forms.CharField()
