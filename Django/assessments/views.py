@@ -270,21 +270,20 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         free_formset_labels.append(q.response) 
     
     if request.method == "POST":
-        formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
-        freeformset = freeResponsesFormSet(initial = [{'response_answer': 'test'}])
+        formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs,prefix="mcForms")
+        freeformset = freeResponsesFormSet(initial = [{'response_answer': 'test'}], prefix="freeForms")
 
-        if formset.is_valid():
+        if formset.is_valid() and freeformset.is_valid():
             print("MC valid")
             with transaction.atomic():
                 for form in formset:
                     Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
 
-        if freeformset.is_valid():
             print("frees valid")
             for form2 in freeformset:
                 print("FREE RESPONSE:", form2.cleaned_data["response_answer"])
                 freeresponse = form2.save(commit=False)
-                print("FREE RESPONSE2:", freeresponse.response_answer)                    # if len(freeresponses) > 0:
+                print("FREE RESPONSE2:", freeresponse.response_answer)                   
                 freeresponse.free_response = FreeResponse.objects.get(pk = freeresponses[0].pk)
                 freeresponse.submission = sub
                 freeresponse.save()
@@ -299,8 +298,8 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         
 
     else:
-        formset = AnswerFormSet(form_kwargs=form_kwargs)
-        freeformset = freeResponsesFormSet()
+        formset = AnswerFormSet(form_kwargs=form_kwargs, prefix="mcForms")
+        freeformset = freeResponsesFormSet(prefix="freeForms")
 
 
     question_forms = zip(questions, formset)

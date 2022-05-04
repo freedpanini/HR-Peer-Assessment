@@ -51,13 +51,13 @@
         <div style="margin-top: 10px;" class="ui basic padded segment left aligned">
             <div class="ui form {% if form.errors %}error{% endif %}">
                 <h4 class="ui header">
-                    Question {{ forloop.counter }}: {{ freeresponse.response }}
+                    Free Response {{ forloop.counter }}: {{ freeresponse.response }}
                 </h4>
             </div>
         </div>
         {% endfor %}
         {% for form2 in freeformset %}
-        
+        Free response: {{forloop.counter}}
         {{ form2.as_p}}
         {{ form2.errors}}
 
