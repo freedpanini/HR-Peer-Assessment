@@ -51,7 +51,7 @@ def create_assessment(request, course_pk):
 def edit_assessment(request, pk, course_pk):
     try:
         peer_assessment = PeerAssessment.objects.prefetch_related("question_set__option_set").get(
-            pk=pk, creator=request.user, is_active=False
+            pk=pk, creator=request.user
         )
     except PeerAssessment.DoesNotExist:
         print("Doesnt exist")
@@ -59,7 +59,7 @@ def edit_assessment(request, pk, course_pk):
 
     try:
         peer_assessment2 = PeerAssessment.objects.prefetch_related("freeresponse_set").get(
-            pk=pk, creator=request.user, is_active=False
+            pk=pk, creator=request.user
         )
     except PeerAssessment.DoesNotExist:
         raise Http404()
@@ -67,25 +67,32 @@ def edit_assessment(request, pk, course_pk):
     questions = peer_assessment.question_set.all()
     frees = peer_assessment2.freeresponse_set.all()
     if request.method == "POST":
-        peer_assessment.is_active = True
-        peer_assessment.save()
-        course = Course.objects.get(course_id=peer_assessment.course_id)
-        registrations = Registration.objects.filter(course_id=course.course_id)
-        student_emails = [o.student for o in registrations]
+        if 'publish_results' in request.POST:
+            peer_assessment.is_published = True
+            peer_assessment.save()
+            print("RESULTS PUBLISHED")
+            return redirect("home")
+        if 'activate_assessment' in request.POST:
+            print("ACTIVATED ASSESSMENTS")
+            peer_assessment.is_active = True
+            peer_assessment.save()
+            course = Course.objects.get(course_id=peer_assessment.course_id)
+            registrations = Registration.objects.filter(course_id=course.course_id)
+            student_emails = [o.student for o in registrations]
 
-        print(student_emails)
+            print(student_emails)
 
-        host = request.get_host()
-        public_path = reverse("start_assessment", args=[pk, course_pk])
-        url = f"{request.scheme}://{host}{public_path}"
+            host = request.get_host()
+            public_path = reverse("start_assessment", args=[pk, course_pk])
+            url = f"{request.scheme}://{host}{public_path}"
 
-        send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
-        url,
-        settings.EMAIL_HOST_USER,
-        student_emails,
-        fail_silently=False,html_message=url)
+            send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
+            url,
+            settings.EMAIL_HOST_USER,
+            student_emails,
+            fail_silently=False,html_message=url)
 
-        return redirect("home")
+            return redirect("home")
     else:
         data = {
             "course_list": get_user_registrations(request),
