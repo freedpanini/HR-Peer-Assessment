@@ -5,7 +5,7 @@
 
 #=======
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import FreeResponseAnswer, PeerAssessment, Question, Answer, Submission
+from .models import FreeResponse, FreeResponseAnswer, PeerAssessment, Question, Answer, Submission
 from courses.models import Course, Registration, Invitation, Team
 from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet, SubmissionForm
 from django.contrib.auth.decorators import login_required
@@ -43,7 +43,7 @@ def create_assessment(request, course_pk):
         "form": form, 
         "course_pk": course_pk
     }
-    email_students_survey(request, data, '', data['name'])
+    # email_students_survey(request, data, '', data['current_course_name'])
 
     return render(request, "assessments/create_assessment.html", data)
 
@@ -225,7 +225,6 @@ def start_assessment(request, peer_assessment_pk,course_pk):
             sub.submitted_by = request.user
             print("CREATOR",sub.submitted_by)
             sub.save()
-            print("valid form saved")
             return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk, course_pk = course_pk)
     else:
         form = SubmissionForm()
@@ -258,17 +257,16 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
 
     freeresponses = peer_assessment.freeresponse_set.all()
     questions = peer_assessment.question_set.all()
+    print("FREE",freeresponses[0])
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
 
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
     freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
+
     free_formset_labels = []
     for q in freeresponses:
         free_formset_labels.append(q.response) 
-
-    print("LABELS", free_formset_labels)
-    print(len(free_formset_labels))
     
     if request.method == "POST":
         formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
@@ -280,6 +278,8 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
                     Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
                 for form2 in freeformset:
                     freeresponse = form2.save(commit=False)
+                    print("FREE RESPONSE:", freeresponse.response_answer)
+                    freeresponse.free_response = FreeResponse.objects.get(pk = freeresponses[0].pk)
                     freeresponse.submission = sub
                     freeresponse.save()
 
