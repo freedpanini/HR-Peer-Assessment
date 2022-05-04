@@ -220,10 +220,12 @@ def start_assessment(request, peer_assessment_pk,course_pk):
         form = SubmissionForm(request.POST)
         form.assigned_to = forms.ModelChoiceField(queryset=groupmates)
         if form.is_valid():
+            if Submission.objects.filter(assigned_to = form.cleaned_data["assigned_to"]).filter(submitted_by = request.user).filter(peer_assessment= peer_assessment).exists():
+                Submission.objects.filter(assigned_to = form.cleaned_data["assigned_to"]).filter(submitted_by = request.user).filter(peer_assessment= peer_assessment).delete()
+                print("updated")
             sub = form.save(commit=False)
             sub.peer_assessment = peer_assessment
             sub.submitted_by = request.user
-            print("CREATOR",sub.submitted_by)
             sub.save()
             return redirect("submit_assessment", peer_assessment_pk=peer_assessment_pk, sub_pk=sub.pk, course_pk = course_pk)
     else:
@@ -257,7 +259,6 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
 
     freeresponses = peer_assessment.freeresponse_set.all()
     questions = peer_assessment.question_set.all()
-    print("FREE",freeresponses[0])
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
 
@@ -279,6 +280,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
                 for form2 in freeformset:
                     freeresponse = form2.save(commit=False)
                     print("FREE RESPONSE:", freeresponse.response_answer)
+                    # if len(freeresponses) > 0:
                     freeresponse.free_response = FreeResponse.objects.get(pk = freeresponses[0].pk)
                     freeresponse.submission = sub
                     freeresponse.save()
