@@ -271,26 +271,32 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
     
     if request.method == "POST":
         formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs)
-        freeformset = freeResponsesFormSet()
+        freeformset = freeResponsesFormSet(initial = [{'response_answer': 'test'}])
 
         if formset.is_valid():
+            print("MC valid")
             with transaction.atomic():
                 for form in formset:
                     Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
-                for form2 in freeformset:
-                    freeresponse = form2.save(commit=False)
-                    print("FREE RESPONSE:", freeresponse.response_answer)
-                    # if len(freeresponses) > 0:
-                    freeresponse.free_response = FreeResponse.objects.get(pk = freeresponses[0].pk)
-                    freeresponse.submission = sub
-                    freeresponse.save()
 
-                sub.is_complete = True
-                sub.save()
-
-            return redirect("home")
+        if freeformset.is_valid():
+            print("frees valid")
+            for form2 in freeformset:
+                print("FREE RESPONSE:", form2.cleaned_data["response_answer"])
+                freeresponse = form2.save(commit=False)
+                print("FREE RESPONSE2:", freeresponse.response_answer)                    # if len(freeresponses) > 0:
+                freeresponse.free_response = FreeResponse.objects.get(pk = freeresponses[0].pk)
+                freeresponse.submission = sub
+                freeresponse.save()
         else:
             print("notvalid")
+            print("ERRORS",freeformset.errors)
+
+        sub.is_complete = True
+        sub.save()
+
+        return redirect("home")
+        
 
     else:
         formset = AnswerFormSet(form_kwargs=form_kwargs)
@@ -308,6 +314,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         "current_course_name": Course.objects.get(course_id=course_pk).name,
         "peer_assessment": peer_assessment, 
         "question_forms": question_forms, 
+        "freeresponses": freeresponses,
         "formset": formset,
         "free_forms": free_forms, 
         "freeformset": freeformset

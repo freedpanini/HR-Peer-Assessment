@@ -47,16 +47,23 @@
         {% endfor %}
 
         {{ freeformset.management_form }}
-        {% for freeresponse, form in free_forms %}
+        {% for freeresponse in freeresponses %}
         <div style="margin-top: 10px;" class="ui basic padded segment left aligned">
             <div class="ui form {% if form.errors %}error{% endif %}">
                 <h4 class="ui header">
                     Question {{ forloop.counter }}: {{ freeresponse.response }}
                 </h4>
-                {{ freeformset.as_p}}
             </div>
         </div>
         {% endfor %}
+        {% for form2 in freeformset %}
+        
+        {{ form2.as_p}}
+        {{ form2.errors}}
+
+        {% endfor %}
+
+
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
