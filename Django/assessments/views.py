@@ -9,7 +9,7 @@ from .models import FreeResponse, FreeResponseAnswer, PeerAssessment, Question, 
 from courses.models import Course, Registration, Invitation, Team
 from .forms import FreeResponseAnswerForm, PeerAssessmentForm, QuestionForm, OptionForm, FreeResponseForm, AnswerForm, BaseAnswerFormSet, SubmissionForm
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from courses.models import Course, Registration
 from django.core.mail import send_mail
 from django.conf import settings
@@ -70,6 +70,14 @@ def edit_assessment(request, pk, course_pk):
         if 'publish_results' in request.POST:
             peer_assessment.is_published = True
             peer_assessment.save()
+
+            emails = []
+            registrations= Registration.objects.filter(course_id = course_pk)
+
+            for r in registrations:
+                emails.append(r.student)
+            print(emails)
+
             print("RESULTS PUBLISHED")
             return redirect("home")
         if 'activate_assessment' in request.POST:
@@ -80,19 +88,10 @@ def edit_assessment(request, pk, course_pk):
             registrations = Registration.objects.filter(course_id=course.course_id)
             student_emails = [o.student for o in registrations]
 
-            print(student_emails)
-
-            host = request.get_host()
-            public_path = reverse("start_assessment", args=[pk, course_pk])
-            url = f"{request.scheme}://{host}{public_path}"
-
-            send_mail(f'Peer Assessment Created! Go to link to fill it out! ',
-            url,
-            settings.EMAIL_HOST_USER,
-            student_emails,
-            fail_silently=False,html_message=url)
-
             return redirect("home")
+        else:
+            print("here")
+            return HttpResponse()
     else:
         data = {
             "course_list": get_user_registrations(request),
