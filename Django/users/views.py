@@ -106,7 +106,13 @@ def register_view(request):
         form = UserRegistrationForm(request.POST)
         print("here")
         if form.is_valid():
-            form.save()
+            user = form.save()
+            if form.cleaned_data["occupation"] == "PROFESSOR":
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
+                print("here")
+
             print("success")
             messages.success(request, f'Your account has been created. You can log in now!')    
             return redirect('login')
