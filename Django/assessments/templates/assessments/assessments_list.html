@@ -46,7 +46,7 @@
                         <a class="small text-white stretched-link" style="z-index: 10;"
                             href="{% url 'assessment_results' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
 
-                        {% elif peer_assessment.is_active %}
+                        {% elif peer_assessment.is_staff %}
                         <a class="small text-white stretched-link" style="z-index: 10;"
                             href="{% url 'start_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
 
