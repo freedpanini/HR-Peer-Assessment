@@ -65,9 +65,19 @@ def edit_assessment(request, pk, course_pk):
         )
     except PeerAssessment.DoesNotExist:
         raise Http404()
-
+    
     questions = peer_assessment.question_set.all()
     frees = peer_assessment2.freeresponse_set.all()
+    data = {
+            "course_list": get_user_registrations(request),
+            "invitations": get_user_invitations(request),
+            "current_course_name": Course.objects.get(course_id=course_pk).name,
+            "peer_assessment": peer_assessment, 
+            "questions": questions, 
+            "current_course": course_pk,
+            "frees":frees, 
+            "course_pk": course_pk
+        }
     if request.method == "POST":
         if 'publish_results' in request.POST:
             peer_assessment.is_published = True
@@ -113,17 +123,6 @@ def edit_assessment(request, pk, course_pk):
             print("here")
             return HttpResponse()
     else:
-        data = {
-            "course_list": get_user_registrations(request),
-            "invitations": get_user_invitations(request),
-            "current_course_name": Course.objects.get(course_id=course_pk).name,
-            "peer_assessment": peer_assessment, 
-            "questions": questions, 
-            "current_course": course_pk,
-            "frees":frees, 
-            "course_pk": course_pk
-        }
-        
         return render(request, "assessments/edit_assessment.html", data)
 
 @login_required
