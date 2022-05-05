@@ -384,15 +384,6 @@ def assessment_results(request, peer_assessment_pk, course_pk):
         "current_course_name": Course.objects.get(course_id=course_pk).name,
         "mc_response": max_responses
     }
-    registered = Registration.objects.filter(course_id = data['current_course'])
-    emails = []
-    for r in registered:
-        emails.append(r.student)
-
-    if emails is None or len(emails) == 0:
-        return render(request, "assessments/assessment_results.html", data)
-
-    results_published_email(request, emails, data['current_course_name'])
 
     return render(request, "assessments/assessment_results.html", data)
 
