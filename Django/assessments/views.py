@@ -269,14 +269,14 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
 
+    #create formsets for MCs and free responses
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
     freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
 
-    free_formset_labels = []
-    for q in freeresponses:
-        free_formset_labels.append(q.response) 
     
     if request.method == "POST":
+
+        #tried initial but didnt work
         formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs,prefix="mcForms")
         freeformset = freeResponsesFormSet(initial = [{'response_answer': 'test'}], prefix="freeForms")
 
@@ -288,6 +288,8 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
 
             print("frees valid")
             for form2 in freeformset:
+                #freeformset is never valid because there is no data in text boxes 
+                #these prints wont print anything
                 print("FREE RESPONSE:", form2.cleaned_data["response_answer"])
                 freeresponse = form2.save(commit=False)
                 print("FREE RESPONSE2:", freeresponse.response_answer)                   
