@@ -43,7 +43,7 @@ def create_assessment(request, course_pk):
         "form": form, 
         "course_pk": course_pk
     }
-    #email_students_survey(request, data['course_list'], data['course_pk'], data['current_course_name'])
+    email_students_survey(request, data['course_list'], data['course_pk'], data['current_course_name'])
 
     return render(request, "assessments/create_assessment.html", data)
 
@@ -396,13 +396,18 @@ def results_published_email(request, emails, name):
     fail_silently=False,html_message=message)
     return render(request, 'courses/send_email.html',{})
 
-#course_id no longer in use, submit blank string
 def email_students_survey(request, data, course_id, course_name):
-    emails = data.get(course_id)
+    #print(data)
+    #students = data['course' == course_id]
+    #print(students)
+    emails = Registration.objects.filter(course_id= course_id)
+
+    #Registration.student.get(emails)
 
     if emails is None or len(emails) == 0:
         return
     emails = emails.split(",")
+    print("here is am", emails)
     i = 0
     while i < len(emails):
         emails[i] = emails[i].strip()
