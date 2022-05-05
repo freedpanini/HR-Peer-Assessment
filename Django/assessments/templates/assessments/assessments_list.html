@@ -46,7 +46,7 @@
                         <a class="small text-white stretched-link" style="z-index: 10;"
                             href="{% url 'assessment_results' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
 
-                        {% elif peer_assessment.is_staff %}
+                        {% elif peer_assessment.is_active %}
                         <a class="small text-white stretched-link" style="z-index: 10;"
                             href="{% url 'start_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
 
@@ -75,10 +75,11 @@
             <div class="sub header">You don't have any peer assessments yet, try creating one first!</div>
         </h2>
         {% endif %}
-
+        {% if user.is_staff %}
         <a href="{% url 'create_assessment' course_pk%}">
             <div class="ui primary button">Create a new survey</div>
         </a>
+        {% endif %}
 
     </div>
 </div>
