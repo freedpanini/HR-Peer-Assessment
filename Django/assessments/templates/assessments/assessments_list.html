@@ -33,15 +33,15 @@
                         <div class="card bg-secondary text-white mb-4">
                             <div class="card-body">
                                 {% if user.is_authenticated %}
-                                {% if peer_assessment.is_active %}
-                                <a class="small text-white stretched-link" style="z-index: 10;" href="{% url 'start_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
-                                {% else %}
-                                <a class="small text-white stretched-link" style="z-index: 10; color: white;" href="{% url 'edit_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
-                                {% endif %}
+                                <a class="small text-white stretched-link" style="z-index: 10;" href="{% url 'edit_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
                                 
                                 {% else %}
-                                {% if peer_assessment.is_active %}
+                                {% if peer_assessment.is_published %}
+                                <a class="small text-white stretched-link" style="z-index: 10;" href="{% url 'assessment_results' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
+                                
+                                {% elif peer_assessment.is_active %}
                                 <a class="small text-white stretched-link" style="z-index: 10;" href="{% url 'start_assessment' peer_assessment.pk course_pk%}">{{peer_assessment.title}}</a>
+                                
                                 {% else %}
                                 {{peer_assessment.title}}
                                 {% endif %}

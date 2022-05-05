@@ -53,6 +53,8 @@
         </div>
         {% endfor %}
 
+        
+        {% if not peer_assessment.is_active %}
         <a class="btn btn-primary" href="{% url 'create_question' peer_assessment.pk course_pk%}">
             Add a question
         </a>
@@ -62,8 +64,23 @@
         <div style="margin-bottom: 20px;" class="ui divider"></div>
         <form style="display: inline-block;" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success">Activate Peer Assessment</button>
+            <button type="submit" name="active_assessment" class="btn btn-success">Activate Peer Assessment</button>
         </form>
+
+        {% else %}
+        This Assessment is Active!
+        <div style="margin-bottom: 20px;" class="ui divider"></div>
+        {% if peer_assessment.is_published %}
+        Results have been published!
+        {% else %}
+        <form style="display: inline-block;" method="post">
+            {% csrf_token %}
+            <button type="submit" name="publish_results" class="btn btn-success">Publish Peer Assessment Results</button>
+        </form>
+
+        {% endif %}
+        {% endif %}
+
         <div style="margin-bottom: 20px;" class="ui divider"></div>
         <a class="btn btn-secondary" href="{% url 'assessments_list' course_pk %}">
             Back

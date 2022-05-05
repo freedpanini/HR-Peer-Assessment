@@ -14,6 +14,7 @@ class PeerAssessment(models.Model):
     creation_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=get_week_ahead)
     course_id = models.IntegerField()
+    is_published = models.BooleanField(default=False)
 
 class Question(models.Model):
     peer_assessment = models.ForeignKey(PeerAssessment, on_delete=models.CASCADE)
