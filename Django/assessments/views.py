@@ -286,52 +286,45 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
     questions = peer_assessment.question_set.all()
     options = [q.option_set.all() for q in questions]
     form_kwargs = {"empty_permitted": False, "options": options}
-
+    
     #create formsets for MCs and free responses
     AnswerFormSet = formset_factory(AnswerForm, extra=len(questions), formset=BaseAnswerFormSet)
     freeResponsesFormSet = formset_factory(FreeResponseAnswerForm, extra = len(freeresponses))
 
+    mcFormSet = AnswerFormSet(request.POST or None, form_kwargs=form_kwargs, prefix="mcForms")
+    frqFormSet = freeResponsesFormSet(request.POST or None, prefix="frqForms")
     
-    if request.method == "POST":
+    if request.method=='POST':
+        try:
+            if mcFormSet.is_valid():
+                with transaction.atomic():
+                    for form in mcFormSet:
+                        print(form.cleaned_data["option"])
+                        Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
+            else:
+                print("mcbad")
+                print(mcFormSet.errors)
+        except KeyError:
+            print("no MC")
 
-        #tried initial but didnt work
-        formset = AnswerFormSet(request.POST, form_kwargs=form_kwargs,prefix="mcForms")
-        freeformset = freeResponsesFormSet(initial = [{'response_answer': 'test'}], prefix="freeForms")
+        try:
+            if frqFormSet.is_valid():
+                i = 0
+                for form in frqFormSet:
+                    print(freeresponses[i].response)
+                    print(form.cleaned_data)
+                    FreeResponseAnswer.objects.create(submission_id=sub_pk, free_response=freeresponses[i], response_answer=form.cleaned_data)
+                    i += 1
+            else:
+                print("frqbad")
+                print(frqFormSet.errors)
 
-        if formset.is_valid() and freeformset.is_valid():
-            print("MC valid")
-            with transaction.atomic():
-                for form in formset:
-                    Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
-
-            print("frees valid")
-            for form2 in freeformset:
-                #freeformset is never valid because there is no data in text boxes 
-                #these prints wont print anything
-                print("FREE RESPONSE:", form2.cleaned_data["response_answer"])
-                freeresponse = form2.save(commit=False)
-                print("FREE RESPONSE2:", freeresponse.response_answer)                   
-                freeresponse.free_response = FreeResponse.objects.get(pk = freeresponses[0].pk)
-                freeresponse.submission = sub
-                freeresponse.save()
-        else:
-            print("notvalid")
-            print("ERRORS",freeformset.errors)
-
-        sub.is_complete = True
-        sub.save()
-
-        return redirect("home")
-        
-
-    else:
-        formset = AnswerFormSet(form_kwargs=form_kwargs, prefix="mcForms")
-        freeformset = freeResponsesFormSet(prefix="freeForms")
-
-
-    question_forms = zip(questions, formset)
-    free_forms = zip(freeresponses, freeformset)
-
+        except KeyError:
+            print("No FRQ")
+        return redirect("assessments_list", course_pk=course_pk)
+    
+    question_forms = zip(questions, mcFormSet)
+    frq_forms = zip(freeresponses, frqFormSet)
 
     data = {
         "course_list": get_user_registrations(request),
@@ -339,11 +332,8 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         "current_course": course_pk,
         "current_course_name": Course.objects.get(course_id=course_pk).name,
         "peer_assessment": peer_assessment, 
-        "question_forms": question_forms, 
-        "freeresponses": freeresponses,
-        "formset": formset,
-        "free_forms": free_forms, 
-        "freeformset": freeformset
+        "question_forms": question_forms,
+        "frq_forms": frq_forms
     }
     return render(request, "assessments/submit_assessment.html", data)
 
