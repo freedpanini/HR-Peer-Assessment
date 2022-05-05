@@ -215,7 +215,7 @@ def create_free_response(request, peer_assessment_pk,course_pk):
 
 @login_required
 def assessments_list(request,course_pk):
-    peer_assessments = PeerAssessment.objects.filter(creator=request.user).filter(course_id=course_pk).order_by("-creation_date").all()
+    peer_assessments = PeerAssessment.objects.filter(course_id=course_pk).order_by("-creation_date").all()
     curr = Course.objects.get(course_id=course_pk)
     data = {
         "course_list": get_user_registrations(request),
