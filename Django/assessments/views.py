@@ -414,6 +414,7 @@ def email_students_survey(request, data, course_id, course_name):
 
     if emails is None or len(emails) == 0:
         return
+    print(emails)
     emails = emails.split(",")
     print("here is am", emails)
     i = 0
