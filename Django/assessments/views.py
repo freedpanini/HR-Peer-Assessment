@@ -20,6 +20,9 @@ from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.models import Group, User
 from django import forms
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
 
 # Create your views here.
 @login_required
@@ -43,7 +46,6 @@ def create_assessment(request, course_pk):
         "form": form, 
         "course_pk": course_pk
     }
-    email_students_survey(request, data['course_list'], data['course_pk'], data['current_course_name'])
 
     return render(request, "assessments/create_assessment.html", data)
 
@@ -79,8 +81,26 @@ def edit_assessment(request, pk, course_pk):
             print(emails)
 
             print("RESULTS PUBLISHED")
+            registered = Registration.objects.filter(course_id = data['current_course'])
+            emails = []
+            for r in registered:
+                emails.append(r.student)
+
+            if emails is None or len(emails) == 0:
+                return render(request, "assessments/assessment_results.html", data)
+
+            results_published_email(request, emails, data['current_course_name'])
             return redirect("home")
         if 'activate_assessment' in request.POST:
+            registered = Registration.objects.filter(course_id = data['course_pk'])
+            emails = []
+            for r in registered:
+                emails.append(r.student)
+
+            if emails is None or len(emails) == 0:
+                return render(request, "assessments/create_assessment.html", data)
+
+            assessment_release_email(request, emails, data['current_course_name'])
             print("ACTIVATED ASSESSMENTS")
             peer_assessment.is_active = True
             peer_assessment.save()
@@ -365,6 +385,16 @@ def assessment_results(request, peer_assessment_pk, course_pk):
         "current_course_name": Course.objects.get(course_id=course_pk).name,
         "mc_response": max_responses
     }
+    registered = Registration.objects.filter(course_id = data['current_course'])
+    emails = []
+    for r in registered:
+        emails.append(r.student)
+
+    if emails is None or len(emails) == 0:
+        return render(request, "assessments/assessment_results.html", data)
+
+    results_published_email(request, emails, data['current_course_name'])
+
     return render(request, "assessments/assessment_results.html", data)
 
 def get_user_registrations(request):
@@ -381,11 +411,11 @@ def get_user_invitations(request):
     return invitations
 
 def assessment_release_email(request, emails, name):
-    ctx={
-        'name':name,
-    }
-    message=render_to_string('assessments/assessment_email.html',ctx)
-    send_mail(f'The survey for this assignment are not ready to be filled out',
+    #ctx={
+    #    'name':name,
+    #}
+    message=render_to_string('assessments/assessment_email.html')
+    send_mail('The survey is now ready to be filled out',
     message,
     settings.EMAIL_HOST_USER,
     emails,
@@ -393,11 +423,11 @@ def assessment_release_email(request, emails, name):
     return render(request, 'courses/send_email.html',{})
 
 def results_published_email(request, emails, name):
-    ctx={
-        'name':name,
-    }
-    message=render_to_string('assessments/results_email.html',ctx)
-    send_mail(f'The results are now available to view ',
+   #ctx={
+   #     'name':name,
+   # }
+    message=render_to_string('assessments/results_email.html')
+    send_mail('The results are now available to view ',
     message,
     settings.EMAIL_HOST_USER,
     emails,
