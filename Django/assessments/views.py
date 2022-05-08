@@ -299,7 +299,6 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
             if mcFormSet.is_valid():
                 with transaction.atomic():
                     for form in mcFormSet:
-                        print(form.cleaned_data["option"])
                         Answer.objects.create(option_id=form.cleaned_data["option"], submission_id=sub_pk)
             else:
                 print("mcbad")
@@ -311,9 +310,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
             if frqFormSet.is_valid():
                 i = 0
                 for form in frqFormSet:
-                    print(freeresponses[i].response)
-                    print(form.cleaned_data)
-                    FreeResponseAnswer.objects.create(submission_id=sub_pk, free_response=freeresponses[i], response_answer=form.cleaned_data)
+                    FreeResponseAnswer.objects.create(submission_id=sub_pk, free_response=freeresponses[i], response_answer=form.cleaned_data['response_answer'])
                     i += 1
             else:
                 print("frqbad")
@@ -333,7 +330,9 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
         "current_course_name": Course.objects.get(course_id=course_pk).name,
         "peer_assessment": peer_assessment, 
         "question_forms": question_forms,
-        "frq_forms": frq_forms
+        "frq_forms": frq_forms,
+        "mcFormSet": mcFormSet,
+        "frqFormSet": frqFormSet
     }
     return render(request, "assessments/submit_assessment.html", data)
 
@@ -354,13 +353,12 @@ def assessment_results(request, peer_assessment_pk, course_pk):
             else:
                 mc_response[q.question] = {}
                 mc_response[q.question][op.option_text] = 1
-        fr_answers = FreeResponseAnswer.objects.filter(submission=submission)
 
-        for fr_answer in fr_answers:    #TODO: collect free response answers
-            print(fr_answer.response_answer)
+        fr_answers = FreeResponseAnswer.objects.filter(submission=submission)
+        for fr_answer in fr_answers:    #collect frq answers
             q = fr_answer.free_response.response
             if q in frq_response:
-                frq_response[q].push(fr_answer.response_answer)
+                frq_response[q].append(fr_answer.response_answer)
             else:
                 frq_response[q] = [fr_answer.response_answer]
 

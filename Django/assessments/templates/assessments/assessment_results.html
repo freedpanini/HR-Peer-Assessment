@@ -56,9 +56,18 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Qualitative Results
+        </div>
         <div class="card-body">
         {% for key, value in frq_response.items %}
             <div class="list-group">
+                <div class="list-group-item">
+                    <h5>{{key}}</h5>
+                </div>
                 {% for answer in value %}
                 <div class="list-group-item">
                     {{answer}}
