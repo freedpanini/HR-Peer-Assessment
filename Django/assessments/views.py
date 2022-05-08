@@ -340,6 +340,7 @@ def submit_assessment(request, peer_assessment_pk, sub_pk, course_pk):
 def assessment_results(request, peer_assessment_pk, course_pk):
     submissions = Submission.objects.filter(assigned_to=request.user, peer_assessment=peer_assessment_pk)
     mc_response = {}  #mc_response is a hashmap of hashmaps where questions -> options -> occurrence of each option in submissions
+    frq_response = {}
     for submission in submissions:
         answers = Answer.objects.filter(submission=submission)
         for answer in answers:  #collect mc answers
@@ -357,6 +358,11 @@ def assessment_results(request, peer_assessment_pk, course_pk):
 
         for fr_answer in fr_answers:    #TODO: collect free response answers
             print(fr_answer.response_answer)
+            q = fr_answer.free_response.response
+            if q in frq_response:
+                frq_response[q].push(fr_answer.response_answer)
+            else:
+                frq_response[q] = [fr_answer.response_answer]
 
     max_responses = {}
 
@@ -372,7 +378,8 @@ def assessment_results(request, peer_assessment_pk, course_pk):
         "invitations": get_user_invitations(request),
         "current_course": course_pk,
         "current_course_name": Course.objects.get(course_id=course_pk).name,
-        "mc_response": max_responses
+        "mc_response": max_responses,
+        "frq_response": frq_response
     }
 
     return render(request, "assessments/assessment_results.html", data)

@@ -56,6 +56,17 @@
                 </tbody>
             </table>
         </div>
+        <div class="card-body">
+        {% for key, value in frq_response.items %}
+            <div class="list-group">
+                {% for answer in value %}
+                <div class="list-group-item">
+                    {{answer}}
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
